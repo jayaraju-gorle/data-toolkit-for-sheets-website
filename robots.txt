@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://jayarsantos.github.io/data-toolkit-for-sheets-website/sitemap.xml 
