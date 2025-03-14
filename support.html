@@ -12,29 +12,138 @@
     <meta property="og:url" content="https://jayarsantos.github.io/data-toolkit-for-sheets-website/support.html">
     <link rel="canonical" href="https://jayarsantos.github.io/data-toolkit-for-sheets-website/support.html">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <header>
-        <h1>Support</h1>
+        <div class="container">
+            <h1>Support</h1>
+            <p>Help and resources for Data Toolkit for Sheets</p>
+        </div>
     </header>
+    
     <nav>
         <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="privacy.html">Privacy Policy</a></li>
-            <li><a href="terms.html">Terms of Service</a></li>
-            <li><a href="support.html">Support</a></li>
+            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="privacy.html"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+            <li><a href="terms.html"><i class="fas fa-file-contract"></i> Terms of Service</a></li>
+            <li><a href="support.html"><i class="fas fa-question-circle"></i> Support</a></li>
         </ul>
     </nav>
+    
     <main>
-        <section>
+        <section class="container">
             <h2>Support and Frequently Asked Questions</h2>
-            <h3>What does the Add-on do?</h3>
-            <p>Data Toolkit for Sheets provides tools for enhanced data analysis within Google Sheets, including API integration and AI assistance, to help you perform data-related tasks more efficiently.</p>
-            <h3>How do I install the Add-on?</h3>
-            <p>The Add-on can be easily installed from the Google Workspace Marketplace. Simply search for "Data Toolkit for Sheets" and follow the installation instructions.</p>
-            <h3>How can I contact support?</h3>
-            <p>If you need assistance, please email us at <a href="mailto:gorlej2015@email.iimcal.ac.in">gorlej2015@email.iimcal.ac.in</a>. We strive to respond to all inquiries within 48 hours.</p>
+            <p class="lead">Find answers to common questions and learn how to get the most out of Data Toolkit for Sheets.</p>
+            
+            <div class="features-grid mt-2">
+                <div class="card">
+                    <h3><i class="fas fa-question-circle"></i> What does the Add-on do?</h3>
+                    <p>Data Toolkit for Sheets provides tools for enhanced data analysis within Google Sheets, including API integration and AI assistance, to help you perform data-related tasks more efficiently.</p>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-download"></i> How do I install the Add-on?</h3>
+                    <p>The Add-on can be easily installed from the Google Workspace Marketplace. Simply search for "Data Toolkit for Sheets" and follow the installation instructions.</p>
+                    <ol class="mt-2">
+                        <li>Open Google Sheets</li>
+                        <li>Click on "Extensions" in the menu</li>
+                        <li>Select "Add-ons" and then "Get add-ons"</li>
+                        <li>Search for "Data Toolkit for Sheets"</li>
+                        <li>Click "Install"</li>
+                    </ol>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-envelope"></i> How can I contact support?</h3>
+                    <p>If you need assistance, please email us at <a href="mailto:gorlej2015@email.iimcal.ac.in">gorlej2015@email.iimcal.ac.in</a>. We strive to respond to all inquiries within 48 hours.</p>
+                </div>
+            </div>
+            
+            <h2 class="mt-2">Common Issues</h2>
+            
+            <div class="accordion">
+                <div class="card">
+                    <h3><i class="fas fa-exclamation-circle"></i> The add-on is not showing up after installation</h3>
+                    <div class="accordion-content">
+                        <p>If the add-on is not appearing:</p>
+                        <ol>
+                            <li>Refresh your Google Sheets page</li>
+                            <li>Check that you're signed in with the same Google account used for installation</li>
+                            <li>Look under the "Extensions" menu for "Data Toolkit for Sheets"</li>
+                            <li>Try closing and reopening Google Sheets</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-wifi"></i> API connection issues</h3>
+                    <div class="accordion-content">
+                        <p>If you're experiencing API connection problems:</p>
+                        <ol>
+                            <li>Verify your API key is entered correctly</li>
+                            <li>Check your internet connection</li>
+                            <li>Ensure the API endpoint is correct and accessible</li>
+                            <li>Look for any quota limitations on the API service you're connecting to</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-cogs"></i> Performance optimization</h3>
+                    <div class="accordion-content">
+                        <p>To improve performance when working with large datasets:</p>
+                        <ol>
+                            <li>Limit the range of cells being processed</li>
+                            <li>Use batch operations instead of cell-by-cell processing when possible</li>
+                            <li>Close unused tabs and extensions in your browser</li>
+                            <li>Consider splitting very large datasets into separate sheets</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-2 text-center">
+                <h3><i class="fas fa-headset"></i> Still Need Help?</h3>
+                <p>Our support team is ready to assist you with any questions or issues you may have.</p>
+                <a href="mailto:gorlej2015@email.iimcal.ac.in" class="cta-button">Contact Support</a>
+            </div>
         </section>
     </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Data Toolkit for Sheets. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a> | 
+                <a href="terms.html">Terms of Service</a> | 
+                <a href="support.html">Support</a>
+            </div>
+            <p class="mt-2">Contact: <a href="mailto:gorlej2015@email.iimcal.ac.in">gorlej2015@email.iimcal.ac.in</a></p>
+        </div>
+    </footer>
+    
+    <script>
+    // Simple accordion functionality for FAQs
+    document.addEventListener('DOMContentLoaded', function() {
+        const accordionItems = document.querySelectorAll('.accordion .card h3');
+        
+        accordionItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                
+                // Toggle the active class
+                this.classList.toggle('active');
+                
+                // Toggle visibility of content
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        });
+    });
+    </script>
 </body>
 </html>
