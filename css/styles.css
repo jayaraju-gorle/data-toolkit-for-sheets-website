@@ -294,3 +294,53 @@
   ol li {
     margin-bottom: 0.5rem;
   }
+
+/* Optimize image rendering */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Add current page indicator in navigation */
+nav ul li.current-page a {
+  background-color: var(--primary-color);
+  font-weight: bold;
+}
+
+/* Improve page transitions */
+body {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Improve accessibility */
+:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --light-color: #1a1a1a;
+    --text-color: #f0f0f0;
+    --text-light: #d0d0d0;
+    --secondary-color: #2a2a2a;
+  }
+  
+  body {
+    background-color: var(--light-color);
+  }
+  
+  main, .card {
+    background-color: #2a2a2a;
+  }
+  
+  h2 {
+    border-bottom-color: var(--primary-color);
+  }
+}
