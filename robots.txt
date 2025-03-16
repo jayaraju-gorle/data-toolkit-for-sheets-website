@@ -1,3 +1,22 @@
+# Data Toolkit for Sheets - robots.txt
+# Last updated: 2024-03-15
+
 User-agent: *
 Allow: /
-Sitemap: https://jayarsantos.github.io/data-toolkit-for-sheets-website/sitemap.xml 
+Disallow: /private/
+Disallow: /admin/
+Disallow: /temp/
+Disallow: /draft/
+
+# Allow search engines to crawl JavaScript and CSS files
+Allow: /*.js$
+Allow: /*.css$
+
+# Disallow duplicate content
+Disallow: /*?*
+
+# Sitemap location
+Sitemap: https://www.datatoolkitforsheets.com/sitemap.xml
+
+# Crawl delay (optional - adjust if needed)
+# Crawl-delay: 1 
