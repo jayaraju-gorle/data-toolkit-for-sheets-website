@@ -5,7 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
     headerContainer.innerHTML = `
       <div class="container">
         <div class="logo-container">
-          <img src="images/logo.png" alt="Data Toolkit for Sheets Logo" class="logo">
+          <a href="https://www.datatoolkitforsheets.com/" class="logo-link">
+            <img src="images/logo.png" alt="Data Toolkit for Sheets Logo" class="logo">
+          </a>
           <div class="header-text">
             <h1 id="page-title">Welcome to Data Toolkit for Sheets</h1>
             <p id="page-subtitle">Advanced data tools to supercharge your Google Sheets experience</p>
