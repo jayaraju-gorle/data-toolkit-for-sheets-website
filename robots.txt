@@ -1,5 +1,5 @@
 # Data Toolkit for Sheets - robots.txt
-# Last updated: 2024-03-15
+# Last updated: 2024-03-16
 
 User-agent: *
 Allow: /
@@ -14,8 +14,10 @@ Allow: /*.css$
 
 # Disallow duplicate content
 Disallow: /*?*
+Disallow: /*&*
 
-# Sitemap location
+# Sitemaps
+Sitemap: https://www.datatoolkitforsheets.com/sitemapindex.xml
 Sitemap: https://www.datatoolkitforsheets.com/sitemap.xml
 
 # Crawl delay (optional - adjust if needed)

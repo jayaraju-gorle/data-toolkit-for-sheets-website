@@ -1,0 +1,21 @@
+{
+  "name": "Data Toolkit for Sheets",
+  "short_name": "DataToolkit",
+  "description": "Advanced data tools to enhance your Google Sheets experience with API integration, AI assistance, and utility functions.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4285F4",
+  "icons": [
+    {
+      "src": "images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+} 
