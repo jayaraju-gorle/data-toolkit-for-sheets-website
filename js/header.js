@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     headerContainer.innerHTML = `
       <div class="container">
         <div class="logo-container">
-          <a href="https://www.datatoolkitforsheets.com/" class="logo-link">
+          <a href="https://www.datatoolkitforsheets.com/" class="logo-link" aria-label="Data Toolkit Homepage">
             <img src="images/logo.png" alt="Data Toolkit for Sheets Logo" class="logo">
           </a>
           <div class="header-text">

@@ -3,12 +3,14 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (navContainer) {
     navContainer.innerHTML = `
-      <ul>
-        <li><a href="https://www.datatoolkitforsheets.com/"><i class="fas fa-home"></i> Home</a></li>
-        <li><a href="privacy.html"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
-        <li><a href="terms.html"><i class="fas fa-file-contract"></i> Terms of Service</a></li>
-        <li><a href="support.html"><i class="fas fa-question-circle"></i> Support</a></li>
-      </ul>
+      <div class="container">
+        <ul>
+          <li><a href="https://www.datatoolkitforsheets.com/"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="privacy.html"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+          <li><a href="terms.html"><i class="fas fa-file-contract"></i> Terms of Service</a></li>
+          <li><a href="support.html"><i class="fas fa-question-circle"></i> Support</a></li>
+        </ul>
+      </div>
     `;
     
     // Highlight current page in navigation
@@ -17,11 +19,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (currentNav) {
       currentNav.parentElement.classList.add('current-page');
+      currentNav.setAttribute('aria-current', 'page');
     } else if (currentPage === '' || currentPage === 'index.html') {
       // Highlight home link when on homepage
       const homeLink = navContainer.querySelector('a[href="https://www.datatoolkitforsheets.com/"]');
       if (homeLink) {
         homeLink.parentElement.classList.add('current-page');
+        homeLink.setAttribute('aria-current', 'page');
       }
     }
   }
