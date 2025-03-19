@@ -15,6 +15,28 @@ const ApiTool = {
         envVars: {}
     },
     
+    // Pre-configured APIs
+    preConfiguredApis: [
+        {
+            name: 'Gemini API',
+            method: 'POST',
+            url: 'https://script.google.com/macros/s/AKfycbzoQy8MpT95ibQ2w61by5oOsJRlzqkqoNu9zB-1adBTsiKqkYIN2pc6fpk3QGdlU_FiZg/exec',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: '{"message": "Hello world", "model": "gemini"}'
+        },
+        {
+            name: 'Llama API',
+            method: 'POST',
+            url: 'https://script.google.com/macros/s/AKfycbzoQy8MpT95ibQ2w61by5oOsJRlzqkqoNu9zB-1adBTsiKqkYIN2pc6fpk3QGdlU_FiZg/exec',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: '{"message": "hello world", "model": "llama"}'
+        }
+    ],
+    
     // Request history
     requestHistory: [],
     
@@ -138,6 +160,34 @@ const ApiTool = {
         document.getElementById('clear-request').addEventListener('click', () => {
             this.clearRequest();
         });
+        
+        // Pre-configured APIs selector
+        const preConfiguredApisSelect = document.getElementById('pre-configured-apis');
+        if (preConfiguredApisSelect) {
+            preConfiguredApisSelect.addEventListener('change', (e) => {
+                const selectedApi = this.preConfiguredApis.find(api => api.name === e.target.value);
+                if (selectedApi) {
+                    this.currentRequest = { ...selectedApi };
+                    this.updateRequestUI();
+                }
+            });
+        }
+        
+        // Import cURL button
+        const importCurlBtn = document.getElementById('import-curl');
+        if (importCurlBtn) {
+            importCurlBtn.addEventListener('click', () => {
+                this.importCurl();
+            });
+        }
+        
+        // Export cURL button
+        const exportCurlBtn = document.getElementById('export-curl');
+        if (exportCurlBtn) {
+            exportCurlBtn.addEventListener('click', () => {
+                this.exportCurl();
+            });
+        }
     },
     
     /**
@@ -154,6 +204,17 @@ const ApiTool = {
                             <h5 class="mb-0"><i class="fas fa-paper-plane me-2"></i>API Request</h5>
                         </div>
                         <div class="card-body">
+                            <!-- Pre-configured APIs -->
+                            <div class="mb-3">
+                                <label class="form-label">Pre-configured APIs</label>
+                                <select id="pre-configured-apis" class="form-select mb-2">
+                                    <option value="">Select an API...</option>
+                                    ${this.preConfiguredApis.map(api => `
+                                        <option value="${api.name}">${api.name}</option>
+                                    `).join('')}
+                                </select>
+                            </div>
+                            
                             <!-- HTTP Method Selection -->
                             <div class="btn-group mb-3 w-100" role="group">
                                 <button type="button" class="btn api-method-selector btn-outline-secondary" data-method="GET">GET</button>
@@ -194,7 +255,13 @@ const ApiTool = {
                                     <i class="fas fa-play me-2"></i>Execute Request
                                 </button>
                                 <div>
-                                    <button id="save-request" class="btn btn-outline-secondary">
+                                    <button id="import-curl" class="btn btn-outline-secondary me-1">
+                                        <i class="fas fa-file-import me-1"></i>Import cURL
+                                    </button>
+                                    <button id="export-curl" class="btn btn-outline-secondary me-1">
+                                        <i class="fas fa-file-export me-1"></i>Export cURL
+                                    </button>
+                                    <button id="save-request" class="btn btn-outline-secondary me-1">
                                         <i class="fas fa-save me-1"></i>Save
                                     </button>
                                     <button id="clear-request" class="btn btn-outline-secondary">
@@ -279,8 +346,7 @@ const ApiTool = {
                 </div>
             </div>
         `;
-    }
-,
+    },
 
     /**
      * Update the method selection UI
@@ -454,8 +520,7 @@ const ApiTool = {
         if (row) {
             row.remove();
         }
-    }
-,
+    },
 
     /**
      * Save the environment variables from the UI
@@ -879,5 +944,71 @@ const ApiTool = {
         if (url.length <= maxLength) return url;
         
         return url.substring(0, maxLength - 3) + '...';
+    },
+    
+    /**
+     * Import cURL command
+     */
+    importCurl: function() {
+        const curlInput = prompt('Paste your cURL command here:');
+        if (!curlInput) return;
+        
+        try {
+            // Basic cURL parsing (can be enhanced for more complex cases)
+            const urlMatch = curlInput.match(/--location '([^']+)'/);
+            const methodMatch = curlInput.match(/-X ([A-Z]+)/);
+            const headerMatches = curlInput.match(/--header '([^']+)'/g);
+            const dataMatch = curlInput.match(/--data '([^']+)'/);
+            
+            if (urlMatch) this.currentRequest.url = urlMatch[1];
+            if (methodMatch) this.currentRequest.method = methodMatch[1];
+            
+            // Parse headers
+            if (headerMatches) {
+                this.currentRequest.headers = {};
+                headerMatches.forEach(header => {
+                    const [key, value] = header.match(/--header '([^:]+): ([^']+)'/).slice(1);
+                    this.currentRequest.headers[key.trim()] = value.trim();
+                });
+            }
+            
+            // Parse data
+            if (dataMatch) {
+                this.currentRequest.body = dataMatch[1];
+            }
+            
+            this.updateRequestUI();
+            DataToolkit.notify('cURL command imported successfully', 'success');
+        } catch (error) {
+            DataToolkit.notify('Failed to parse cURL command', 'error');
+        }
+    },
+    
+    /**
+     * Export current request as cURL command
+     */
+    exportCurl: function() {
+        let curlCommand = `curl --location '${this.currentRequest.url}'`;
+        
+        if (this.currentRequest.method !== 'GET') {
+            curlCommand += ` -X ${this.currentRequest.method}`;
+        }
+        
+        // Add headers
+        Object.entries(this.currentRequest.headers).forEach(([key, value]) => {
+            curlCommand += ` --header '${key}: ${value}'`;
+        });
+        
+        // Add data if present
+        if (this.currentRequest.body) {
+            curlCommand += ` --data '${this.currentRequest.body}'`;
+        }
+        
+        // Copy to clipboard
+        navigator.clipboard.writeText(curlCommand).then(() => {
+            DataToolkit.notify('cURL command copied to clipboard', 'success');
+        }).catch(() => {
+            DataToolkit.notify('Failed to copy cURL command', 'error');
+        });
     }
 };

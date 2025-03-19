@@ -10,8 +10,24 @@ const AiChat = {
     // Module configuration
     config: {
         models: [
-            { id: 'gemini', name: 'Gemini (Google)', description: 'Best for general knowledge and assistant tasks' },
-            { id: 'llama', name: 'Llama (Meta)', description: 'Excels at reasoning and complex problem solving' }
+            { 
+                id: 'gemini', 
+                name: 'Gemini (Google)', 
+                description: 'Best for general knowledge and assistant tasks',
+                endpoint: 'https://script.google.com/macros/s/AKfycbzoQy8MpT95ibQ2w61by5oOsJRlzqkqoNu9zB-1adBTsiKqkYIN2pc6fpk3QGdlU_FiZg/exec',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            },
+            { 
+                id: 'llama', 
+                name: 'Llama (Meta)', 
+                description: 'Excels at reasoning and complex problem solving',
+                endpoint: 'https://script.google.com/macros/s/AKfycbzoQy8MpT95ibQ2w61by5oOsJRlzqkqoNu9zB-1adBTsiKqkYIN2pc6fpk3QGdlU_FiZg/exec',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
         ],
         maxHistoryItems: 50,
         defaultModel: 'gemini'
@@ -21,19 +37,13 @@ const AiChat = {
     state: {
         messages: [],
         selectedModel: null,
-        isWaiting: false,
-        endpointUrl: '',
-        apiKey: '',
-        context: '', // Optional context to include with each message
+        isWaiting: false
     },
     
     /**
      * Initialize the AI Chat module
      */
     init: function() {
-        // Load settings from storage
-        this.loadSettings();
-        
         // Load conversation history
         this.loadHistory();
         
@@ -45,9 +55,6 @@ const AiChat = {
         
         // Initialize model selector
         this.initializeModelSelector();
-        
-        // Setup endpoint configuration
-        this.initializeEndpointConfig();
     },
     
     /**
@@ -60,13 +67,10 @@ const AiChat = {
                 <div class="row mb-4">
                     <div class="col-md-8">
                         <div class="card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
+                            <div class="card-header">
                                 <h5 class="mb-0">
                                     <i class="fas fa-robot me-2"></i> AI Chat
                                 </h5>
-                                <button type="button" id="ai-chat-settings-btn" class="btn btn-sm btn-outline-primary">
-                                    <i class="fas fa-cog"></i> Settings
-                                </button>
                             </div>
                             <div class="card-body p-0">
                                 <div class="chat-container">
@@ -113,41 +117,6 @@ const AiChat = {
                         </div>
                     </div>
                 </div>
-                
-                <!-- Settings Modal -->
-                <div class="modal fade" id="ai-chat-settings-modal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="settingsModalLabel">AI Chat Settings</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="ai-settings-form">
-                                    <div class="mb-3">
-                                        <label for="endpoint-url" class="form-label">API Endpoint URL</label>
-                                        <input type="url" class="form-control" id="endpoint-url" placeholder="https://your-api-endpoint.com/chat">
-                                        <div class="form-text">The URL where chat requests will be sent</div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="api-key" class="form-label">API Key</label>
-                                        <input type="password" class="form-control" id="api-key" placeholder="Your API key">
-                                        <div class="form-text">Your API key for authentication (stored locally)</div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="context-input" class="form-label">Default Context</label>
-                                        <textarea class="form-control" id="context-input" rows="3" placeholder="Optional context to include with each message"></textarea>
-                                        <div class="form-text">This context will be included with each message sent to the AI</div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="button" id="save-settings-btn" class="btn btn-primary">Save Settings</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         `;
     },
@@ -162,22 +131,6 @@ const AiChat = {
             chatForm.addEventListener('submit', (event) => {
                 event.preventDefault();
                 this.handleChatSubmit();
-            });
-        }
-        
-        // Settings button
-        const settingsBtn = document.getElementById('ai-chat-settings-btn');
-        if (settingsBtn) {
-            settingsBtn.addEventListener('click', () => {
-                this.openSettingsModal();
-            });
-        }
-        
-        // Save settings button
-        const saveSettingsBtn = document.getElementById('save-settings-btn');
-        if (saveSettingsBtn) {
-            saveSettingsBtn.addEventListener('click', () => {
-                this.saveSettings();
             });
         }
         
@@ -202,11 +155,50 @@ const AiChat = {
         if (modelSelector) {
             modelSelector.addEventListener('change', () => {
                 this.state.selectedModel = modelSelector.value;
-                // Save the selected model in settings
-                const settings = DataToolkit.loadFromStorage(DataToolkit.STORAGE_KEYS.CHAT_SETTINGS, {});
-                settings.selectedModel = this.state.selectedModel;
-                DataToolkit.saveToStorage(DataToolkit.STORAGE_KEYS.CHAT_SETTINGS, settings);
             });
+        }
+    },
+    
+    /**
+     * Handle chat form submission
+     */
+    handleChatSubmit: async function() {
+        const messageInput = document.getElementById('message-input');
+        const message = messageInput.value.trim();
+        
+        if (!message || this.state.isWaiting) return;
+        
+        // Add user message to chat
+        this.addMessage('user', message);
+        messageInput.value = '';
+        
+        // Get selected model
+        const selectedModel = this.config.models.find(m => m.id === this.state.selectedModel) || 
+                            this.config.models.find(m => m.id === this.config.defaultModel);
+        
+        if (!selectedModel) {
+            this.addMessage('ai', 'Error: No model selected');
+            return;
+        }
+        
+        this.state.isWaiting = true;
+        
+        try {
+            const response = await fetch(selectedModel.endpoint, {
+                method: 'POST',
+                headers: selectedModel.headers,
+                body: JSON.stringify({
+                    message: message,
+                    model: selectedModel.id
+                })
+            });
+            
+            const data = await response.json();
+            this.addMessage('ai', data.response || 'Sorry, I encountered an error processing your request.');
+        } catch (error) {
+            this.addMessage('ai', 'Sorry, I encountered an error processing your request.');
+        } finally {
+            this.state.isWaiting = false;
         }
     },
     
@@ -233,124 +225,6 @@ const AiChat = {
         if (this.state.selectedModel) {
             modelSelector.value = this.state.selectedModel;
         }
-    },
-    
-    /**
-     * Initialize endpoint configuration fields in the settings modal
-     */
-    initializeEndpointConfig: function() {
-        const endpointUrlInput = document.getElementById('endpoint-url');
-        const apiKeyInput = document.getElementById('api-key');
-        const contextInput = document.getElementById('context-input');
-        
-        if (endpointUrlInput) endpointUrlInput.value = this.state.endpointUrl || '';
-        if (apiKeyInput) apiKeyInput.value = this.state.apiKey || '';
-        if (contextInput) contextInput.value = this.state.context || '';
-    },
-    
-    /**
-     * Handle chat form submission
-     */
-    handleChatSubmit: function() {
-        const messageInput = document.getElementById('message-input');
-        const message = messageInput.value.trim();
-        
-        if (!message) return;
-        
-        // Add user message to chat
-        this.addMessage('user', message);
-        
-        // Clear input
-        messageInput.value = '';
-        
-        // Send message to AI
-        this.sendMessageToAI(message);
-    },
-    
-    /**
-     * Send a message to the AI service
-     * @param {string} message - The message to send
-     */
-    sendMessageToAI: function(message) {
-        // Get the selected model
-        const model = this.state.selectedModel || this.config.defaultModel;
-        
-        // Show loading state
-        this.state.isWaiting = true;
-        this.addLoadingIndicator();
-        
-        // Prepare context from previous messages
-        const conversation = this.prepareConversationContext();
-        
-        // Prepare the request
-        let apiUrl = this.state.endpointUrl;
-        
-        // If no endpoint is configured, show an error message instead
-        if (!apiUrl) {
-            this.removeLoadingIndicator();
-            this.addMessage('system', 'Please configure your API endpoint in Settings to use the AI chat feature.');
-            this.state.isWaiting = false;
-            return;
-        }
-        
-        // Prepare headers
-        const headers = {
-            'Content-Type': 'application/json'
-        };
-        
-        // Add API key if provided
-        if (this.state.apiKey) {
-            headers['Authorization'] = `Bearer ${this.state.apiKey}`;
-        }
-        
-        // Prepare the request body
-        const requestBody = {
-            model: model,
-            message: message,
-            conversation: conversation
-        };
-        
-        // If there's context, add it
-        if (this.state.context) {
-            requestBody.context = this.state.context;
-        }
-        
-        // Make the API request
-        fetch(apiUrl, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(requestBody)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`API responded with status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Remove loading indicator
-            this.removeLoadingIndicator();
-            
-            // Add AI response to chat
-            if (data.response) {
-                this.addMessage('ai', data.response, model);
-            } else {
-                throw new Error('Invalid response format from API');
-            }
-        })
-        .catch(error => {
-            // Remove loading indicator
-            this.removeLoadingIndicator();
-            
-            // Add error message
-            this.addMessage('system', `Error: ${error.message}`);
-            
-            // Show error notification
-            DataToolkit.notify(`API error: ${error.message}`, 'error');
-        })
-        .finally(() => {
-            this.state.isWaiting = false;
-        });
     },
     
     /**
@@ -384,35 +258,6 @@ const AiChat = {
         
         // Scroll to bottom
         this.scrollToBottom();
-    },
-    
-    /**
-     * Add loading indicator to chat
-     */
-    addLoadingIndicator: function() {
-        const chatMessages = document.getElementById('chat-messages');
-        if (!chatMessages) return;
-        
-        const loadingHtml = `
-            <div id="loading-indicator" class="message-bubble ai-message loading-indicator">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        `;
-        
-        chatMessages.insertAdjacentHTML('beforeend', loadingHtml);
-        this.scrollToBottom();
-    },
-    
-    /**
-     * Remove loading indicator
-     */
-    removeLoadingIndicator: function() {
-        const loadingIndicator = document.getElementById('loading-indicator');
-        if (loadingIndicator) {
-            loadingIndicator.remove();
-        }
     },
     
     /**
@@ -639,68 +484,6 @@ const AiChat = {
     },
     
     /**
-     * Open the settings modal
-     */
-    openSettingsModal: function() {
-        const endpointUrlInput = document.getElementById('endpoint-url');
-        const apiKeyInput = document.getElementById('api-key');
-        const contextInput = document.getElementById('context-input');
-        
-        // Set current values
-        if (endpointUrlInput) endpointUrlInput.value = this.state.endpointUrl || '';
-        if (apiKeyInput) apiKeyInput.value = this.state.apiKey || '';
-        if (contextInput) contextInput.value = this.state.context || '';
-        
-        // Show the modal
-        const modal = new bootstrap.Modal(document.getElementById('ai-chat-settings-modal'));
-        modal.show();
-    },
-    
-    /**
-     * Save settings from the modal
-     */
-    saveSettings: function() {
-        const endpointUrlInput = document.getElementById('endpoint-url');
-        const apiKeyInput = document.getElementById('api-key');
-        const contextInput = document.getElementById('context-input');
-        
-        // Update state
-        if (endpointUrlInput) this.state.endpointUrl = endpointUrlInput.value.trim();
-        if (apiKeyInput) this.state.apiKey = apiKeyInput.value.trim();
-        if (contextInput) this.state.context = contextInput.value.trim();
-        
-        // Save to localStorage
-        const settings = {
-            endpointUrl: this.state.endpointUrl,
-            apiKey: this.state.apiKey,
-            context: this.state.context,
-            selectedModel: this.state.selectedModel || this.config.defaultModel
-        };
-        
-        DataToolkit.saveToStorage(DataToolkit.STORAGE_KEYS.CHAT_SETTINGS, settings);
-        
-        // Hide the modal
-        const modalElement = document.getElementById('ai-chat-settings-modal');
-        const modal = bootstrap.Modal.getInstance(modalElement);
-        if (modal) modal.hide();
-        
-        // Show success notification
-        DataToolkit.notify('Settings saved successfully', 'success');
-    },
-    
-    /**
-     * Load settings from localStorage
-     */
-    loadSettings: function() {
-        const settings = DataToolkit.loadFromStorage(DataToolkit.STORAGE_KEYS.CHAT_SETTINGS, {});
-        
-        this.state.endpointUrl = settings.endpointUrl || '';
-        this.state.apiKey = settings.apiKey || '';
-        this.state.context = settings.context || '';
-        this.state.selectedModel = settings.selectedModel || this.config.defaultModel;
-    },
-    
-    /**
      * Load conversation history from localStorage
      */
     loadHistory: function() {
@@ -759,19 +542,5 @@ const AiChat = {
             console.error('Error exporting conversation:', error);
             DataToolkit.notify('Error exporting conversation: ' + error.message, 'error');
         }
-    },
-    
-    /**
-     * Prepare conversation context from message history
-     * @returns {Array} Formatted conversation history for the AI
-     */
-    prepareConversationContext: function() {
-        // Filter out system messages and format for the API
-        return this.state.messages
-            .filter(msg => msg.sender !== 'system')
-            .map(msg => ({
-                role: msg.sender === 'user' ? 'user' : 'assistant',
-                content: msg.text
-            }));
     }
 };
