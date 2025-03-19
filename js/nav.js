@@ -19,6 +19,7 @@ function initNavigation() {
   // Define navigation items
   const navItems = [
     { href: 'https://www.datatoolkitforsheets.com/', icon: 'fas fa-home', text: 'Home' },
+    { href: 'try.html', icon: 'fas fa-tools', text: 'Try Tools' },
     { href: 'privacy.html', icon: 'fas fa-shield-alt', text: 'Privacy Policy' },
     { href: 'terms.html', icon: 'fas fa-file-contract', text: 'Terms of Service' },
     { href: 'support.html', icon: 'fas fa-question-circle', text: 'Support' }
