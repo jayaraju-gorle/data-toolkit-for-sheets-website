@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Toolkit for Sheets</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #4285F4;
+            --secondary-color: #34A853;
+            --warning-color: #FBBC05;
+            --danger-color: #EA4335;
+            --light-bg: #f8f9fa;
+            --dark-bg: #202124;
+            --dark-text: #e8eaed;
+            --dark-card: #292a2d;
+            --dark-border: #5f6368;
+        }
+        
+        body {
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body.dark-theme {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+        
+        body.dark-theme .card {
+            background-color: var(--dark-card);
+            border-color: var(--dark-border);
+        }
+        
+        body.dark-theme .form-control,
+        body.dark-theme .form-select {
+            background-color: var(--dark-card);
+            border-color: var(--dark-border);
+            color: var(--dark-text);
+        }
+        
+        body.dark-theme .list-group-item {
+            background-color: var(--dark-card);
+            border-color: var(--dark-border);
+            color: var(--dark-text);
+        }
+        
+        body.dark-theme .modal-content {
+            background-color: var(--dark-card);
+            color: var(--dark-text);
+        }
+        
+        body.dark-theme .table {
+            color: var(--dark-text);
+        }
+        
+        body.dark-theme .nav-tabs .nav-link {
+            color: var(--dark-text);
+        }
+        
+        .nav-link.active {
+            background-color: var(--primary-color) !important;
+            color: white !important;
+        }
+        
+        .tab-content {
+            padding: 15px;
+        }
+        
+        .brand-icon {
+            color: var(--primary-color);
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            transition: transform 0.3s, opacity 0.3s;
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        /* API Tool Specific Styles */
+        .method-get { background-color: #61affe; color: white; }
+        .method-post { background-color: #49cc90; color: white; }
+        .method-put { background-color: #fca130; color: white; }
+        .method-delete { background-color: #f93e3e; color: white; }
+        .method-patch { background-color: #50e3c2; color: white; }
+        
+        .history-item {
+            cursor: pointer;
+        }
+        
+        .history-item:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+        
+        body.dark-theme .history-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        /* AI Chat Specific Styles */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        
+        .message-bubble {
+            max-width: 75%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .user-message {
+            background-color: var(--primary-color);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .ai-message {
+            background-color: #f1f3f4;
+            color: #202124;
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+        
+        body.dark-theme .ai-message {
+            background-color: #3c4043;
+            color: #e8eaed;
+        }
+        
+        .loading-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: rgba(0,0,0,0.5);
+            margin: 0 2px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        
+        body.dark-theme .loading-indicator span {
+            background-color: rgba(255,255,255,0.5);
+        }
+        
+        .loading-indicator span:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+        
+        .loading-indicator span:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+        
+        /* Code syntax highlighting */
+        .hljs {
+            display: block;
+            overflow-x: auto;
+            padding: 0.5em;
+            border-radius: 4px;
+            background-color: #f5f5f5;
+        }
+        
+        body.dark-theme .hljs {
+            background-color: #2d2d2d;
+        }
+        
+        /* JSON formatting */
+        .json-key {
+            color: #a52a2a;
+        }
+        
+        .json-string {
+            color: #008000;
+        }
+        
+        .json-number {
+            color: #0000ff;
+        }
+        
+        .json-boolean {
+            color: #ff8c00;
+        }
+        
+        .json-null {
+            color: #808080;
+        }
+        
+        body.dark-theme .json-key {
+            color: #f07178;
+        }
+        
+        body.dark-theme .json-string {
+            color: #c3e88d;
+        }
+        
+        body.dark-theme .json-number {
+            color: #89ddff;
+        }
+        
+        body.dark-theme .json-boolean {
+            color: #f78c6c;
+        }
+        
+        body.dark-theme .json-null {
+            color: #bdbdbd;
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+    
+    <!-- Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-table brand-icon"></i>
+                Data Toolkit for Sheets
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-module="api-tool" href="#api-tool">
+                            <i class="fas fa-sync-alt"></i> API Tool
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-module="ai-chat" href="#ai-chat">
+                            <i class="fas fa-robot"></i> AI Chat
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-module="timestamp" href="#timestamp">
+                            <i class="fas fa-clock"></i> Timestamp
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <button id="theme-toggle" class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-moon"></i> Dark Mode
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content Area -->
+    <div class="container-fluid">
+        <div id="app-container">
+            <!-- Content will be loaded dynamically by JavaScript -->
+        </div>
+    </div>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Core Application Scripts -->
+    <script src="js/app.js"></script>
+    <script src="js/api-tool.js"></script>
+    <script src="js/ai-chat.js"></script>
+    <script src="js/timestamp-tool.js"></script>
+</body>
+</html>
