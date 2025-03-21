@@ -292,6 +292,151 @@
         body.dark-theme .json-null {
             color: #bdbdbd;
         }
+
+        /* API Tool Styles */
+        .json-tree-node {
+            padding-left: 1.5em;
+            position: relative;
+        }
+
+        .json-tree-toggle {
+            cursor: pointer;
+            position: absolute;
+            left: 0;
+            width: 1.5em;
+            text-align: center;
+            user-select: none;
+        }
+
+        .json-tree-children {
+            margin-left: 1em;
+        }
+
+        .json-key {
+            color: #a52a2a;
+            font-weight: bold;
+        }
+
+        .json-string {
+            color: #008000;
+        }
+
+        .json-number {
+            color: #0000ff;
+        }
+
+        .json-boolean {
+            color: #ff8c00;
+        }
+
+        .json-null {
+            color: #808080;
+        }
+
+        .json-type {
+            color: #666;
+            font-style: italic;
+        }
+
+        body.dark-theme .json-key {
+            color: #f07178;
+        }
+
+        body.dark-theme .json-string {
+            color: #c3e88d;
+        }
+
+        body.dark-theme .json-number {
+            color: #89ddff;
+        }
+
+        body.dark-theme .json-boolean {
+            color: #f78c6c;
+        }
+
+        body.dark-theme .json-null {
+            color: #bdbdbd;
+        }
+
+        body.dark-theme .json-type {
+            color: #b2b2b2;
+        }
+
+        /* Response Tabs */
+        .nav-tabs .nav-link {
+            color: var(--text-color);
+            border: none;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-tabs .nav-link:hover {
+            border: none;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            background: none;
+            border: none;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        /* Accordion Styles */
+        .accordion-button:not(.collapsed) {
+            background-color: rgba(66, 133, 244, 0.1);
+            color: var(--primary-color);
+        }
+
+        .accordion-button:focus {
+            box-shadow: none;
+            border-color: rgba(66, 133, 244, 0.1);
+        }
+
+        /* Response Visualization */
+        #visualizationContainer {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table th {
+            position: sticky;
+            top: 0;
+            background: var(--light-bg);
+            z-index: 1;
+        }
+
+        body.dark-theme .table th {
+            background: var(--dark-card);
+        }
+
+        /* Request Form */
+        #requestUrl {
+            min-width: 0;
+        }
+
+        #requestMethod {
+            min-width: 100px;
+        }
+
+        /* History Items */
+        .history-item {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .history-item:hover {
+            background-color: rgba(66, 133, 244, 0.1);
+        }
+
+        /* Response Status */
+        #responseStatus {
+            font-size: 0.9rem;
+            padding: 0.4em 0.8em;
+        }
     </style>
 </head>
 <body>
