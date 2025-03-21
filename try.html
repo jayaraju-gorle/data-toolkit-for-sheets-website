@@ -336,7 +336,25 @@
             <!-- Tool Content -->
             <div class="tab-content" id="toolTabsContent">
                 <div class="tab-pane fade show active" id="api-tool" role="tabpanel">
-                    <!-- API Tool content will be loaded here -->
+                    <div class="row">
+                        <!-- Public APIs Section -->
+                        <div class="col-12 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Public APIs</h5>
+                                    <p class="card-text">Select a public API to test:</p>
+                                    <select class="form-select" id="publicApiSelect">
+                                        <option value="">-- Select an API --</option>
+                                    </select>
+                                    <div class="mt-2">
+                                        <small class="text-muted" id="apiDescription"></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Request Section -->
+                        <!-- API Tool content will be loaded here -->
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="ai-chat" role="tabpanel">
                     <!-- AI Chat content will be loaded here -->
