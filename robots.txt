@@ -1,5 +1,5 @@
-# Data Toolkit for Sheets - robots.txt
-# Last updated: 2024-03-16
+User-agent: PerplexityBot
+Allow: /
 
 User-agent: *
 Allow: /
@@ -21,4 +21,4 @@ Sitemap: https://www.datatoolkitforsheets.com/sitemapindex.xml
 Sitemap: https://www.datatoolkitforsheets.com/sitemap.xml
 
 # Crawl delay (optional - adjust if needed)
-# Crawl-delay: 1 
+# Crawl-delay: 1

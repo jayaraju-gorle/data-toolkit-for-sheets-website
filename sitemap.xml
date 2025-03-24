@@ -24,4 +24,10 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
-</urlset> 
+  <url>
+    <loc>https://www.datatoolkitforsheets.com/try.html</loc>
+    <lastmod>2024-03-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+</urlset>
