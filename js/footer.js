@@ -55,8 +55,8 @@ function initFooter() {
   contactContainer.textContent = 'Contact: ';
   
   const emailLink = document.createElement('a');
-  emailLink.href = 'mailto:contact@datatoolkit.com';
-  emailLink.textContent = 'contact@datatoolkit.com';
+emailLink.href = 'mailto:contact@datatoolkitforsheets.com';
+  emailLink.textContent = 'contact@datatoolkitforsheets.com';
   emailLink.style.color = 'white';
   
   contactContainer.appendChild(emailLink);
