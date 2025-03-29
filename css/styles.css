@@ -369,3 +369,111 @@ footer a {
     padding: 1.5rem 1rem;
   }
 }
+
+/* Timestamp Tool Specific Styles */
+#timestamp-tool .card-header {
+  background-color: var(--primary-color);
+  color: white;
+  border-bottom: none;
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+}
+
+#timestamp-tool .card-header h5 {
+  margin-bottom: 0; /* Override default heading margin */
+}
+
+#timestamp-tool .card-header .btn-outline-secondary {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+#timestamp-tool .card-header .btn-outline-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: white;
+}
+
+#timestamp-tool .card-header .btn-outline-secondary:disabled {
+  color: rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 255, 255, 0.3);
+  opacity: 0.65;
+}
+
+#timestamp-tool .input-group .form-control {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+#timestamp-tool .input-group #calendarBtn {
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+}
+
+#timestamp-tool .input-group #nowBtn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+#timestamp-tool #outputFormatsContainer .card {
+  background-color: white; /* Override default light-bg for inner cards */
+  border: 1px solid var(--border-color);
+  box-shadow: none; /* Remove shadow from inner cards */
+  height: 100%; /* Ensure cards in a row have same height */
+}
+
+#timestamp-tool #outputFormatsContainer .card:hover {
+  transform: none; /* Disable hover effect for inner cards */
+  box-shadow: none;
+}
+
+#timestamp-tool #outputFormatsContainer .card-body {
+  padding: 1rem; /* Adjust padding */
+}
+
+#timestamp-tool #outputFormatsContainer .card-subtitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+#timestamp-tool #outputFormatsContainer code {
+  font-size: 1rem;
+  color: var(--text-color);
+  display: block; /* Ensure code takes full width */
+  margin-top: 0.25rem;
+  word-break: break-all; /* Prevent long strings from overflowing */
+}
+
+#timestamp-tool .copy-btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1;
+  color: var(--text-light);
+  background: none;
+  border: 1px solid transparent; /* Add border for alignment */
+}
+
+#timestamp-tool .copy-btn:hover {
+  color: var(--primary-color);
+  background-color: rgba(66, 133, 244, 0.1); /* Light primary background */
+  border-color: rgba(66, 133, 244, 0.2);
+}
+
+#timestamp-tool .copy-btn i.fa-check {
+  color: var(--secondary-color); /* Green checkmark */
+}
+
+#timestamp-tool #copyAllBtn {
+  border-radius: 50px; /* Pill shape */
+  padding: 0.5rem 1.5rem;
+}
+
+#timestamp-tool .form-text.text-muted {
+    font-size: 0.8rem;
+}
+
+/* Ensure current time cards have consistent height */
+#timestamp-tool .card.bg-light {
+    height: 100%;
+}
