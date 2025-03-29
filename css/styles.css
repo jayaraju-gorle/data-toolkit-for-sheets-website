@@ -36,6 +36,11 @@
   --text-light: #666;
   --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   --border-radius: 8px;
+  /* Dark theme variables */
+  --dark-bg: #202124;
+  --dark-text: #e8eaed;
+  --dark-card: #292a2d;
+  --dark-border: #5f6368;
 }
 
 * {
@@ -52,6 +57,105 @@ body {
   margin: 0;
   padding: 0;
   animation: fadeIn 0.3s ease-in;
+  transition: background-color 0.3s, color 0.3s; /* For dark theme toggle */
+}
+
+/* Dark Theme Styles */
+body.dark-theme {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+
+body.dark-theme .card {
+    background-color: var(--dark-card);
+    border-color: var(--dark-border);
+    color: var(--dark-text); /* Ensure text inside card is light */
+}
+
+body.dark-theme .form-control,
+body.dark-theme .form-select {
+    background-color: var(--dark-card);
+    border-color: var(--dark-border);
+    color: var(--dark-text);
+}
+/* Ensure placeholder text is visible in dark mode */
+body.dark-theme .form-control::placeholder {
+    color: #9aa0a6;
+}
+
+body.dark-theme .list-group-item {
+    background-color: var(--dark-card);
+    border-color: var(--dark-border);
+    color: var(--dark-text);
+}
+
+body.dark-theme .modal-content {
+    background-color: var(--dark-card);
+    color: var(--dark-text);
+}
+body.dark-theme .modal-header {
+    border-bottom-color: var(--dark-border);
+}
+body.dark-theme .modal-footer {
+    border-top-color: var(--dark-border);
+}
+body.dark-theme .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+
+body.dark-theme .table {
+    color: var(--dark-text);
+}
+body.dark-theme .table th,
+body.dark-theme .table td,
+body.dark-theme .table thead th {
+    border-color: var(--dark-border); /* Darker table borders */
+}
+body.dark-theme .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05); /* Subtle striping */
+}
+
+
+body.dark-theme .nav-tabs .nav-link {
+    color: var(--dark-text);
+    border-color: transparent; /* Reset border */
+}
+body.dark-theme .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--primary-color); /* Keep hover effect */
+}
+body.dark-theme .nav-tabs .nav-link.active {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    border-color: var(--primary-color) !important; /* Match active color */
+}
+
+body.dark-theme a {
+    color: #8ab4f8; /* Lighter blue for links */
+}
+body.dark-theme a:hover {
+    color: #aecbfa;
+}
+
+body.dark-theme header {
+    /* Adjust gradient if needed for dark theme */
+}
+
+body.dark-theme footer {
+    /* Adjust footer background if needed */
+}
+
+body.dark-theme .text-muted {
+    color: #9aa0a6 !important; /* Lighter muted text */
+}
+
+body.dark-theme code {
+    background-color: #3c4043; /* Darker code background */
+    color: #e8eaed; /* Light text for code */
+}
+body.dark-theme pre {
+    background-color: #2d2d2d; /* Even darker for pre blocks */
+    border: 1px solid var(--dark-border);
 }
 
 /* Typography */
@@ -72,6 +176,10 @@ h2 {
   padding-bottom: 0.5rem;
   margin-bottom: 1.5rem;
 }
+body.dark-theme h2 {
+    border-bottom-color: #8ab4f8; /* Lighter border for dark theme */
+}
+
 
 h3 {
   font-size: 1.4rem;
@@ -83,6 +191,10 @@ p {
   margin-bottom: 1.2rem;
   color: var(--text-light);
 }
+body.dark-theme p {
+    color: var(--dark-text); /* Ensure paragraph text is light */
+}
+
 
 a {
   color: var(--primary-color);
@@ -138,6 +250,11 @@ nav {
   box-shadow: var(--shadow);
   border-bottom: 1px solid var(--border-color);
 }
+body.dark-theme nav {
+    background-color: #2b7a4b; /* Slightly darker green */
+    border-bottom-color: var(--dark-border);
+}
+
 
 nav ul {
   list-style: none;
@@ -175,8 +292,12 @@ main {
   padding: 2rem 1rem;
   max-width: 1200px;
   margin: 2rem auto;
-  background-color: white;
+  background-color: white; /* Keep main light unless body has dark-theme */
 }
+body.dark-theme main {
+    background-color: var(--dark-bg); /* Make main dark in dark theme */
+}
+
 
 /* Cards for features or sections */
 .card {
@@ -186,12 +307,17 @@ main {
   margin-bottom: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s;
+  border: 1px solid var(--border-color); /* Add subtle border */
 }
 
 .card:hover {
   transform: translateY(-5px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
+body.dark-theme .card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Darker shadow */
+}
+
 
 .card h3 {
   color: var(--primary-color);
@@ -199,6 +325,10 @@ main {
   display: flex;
   align-items: center;
 }
+body.dark-theme .card h3 {
+    color: #8ab4f8; /* Lighter blue for headings in dark cards */
+}
+
 
 .card h3 i {
   margin-right: 10px;
@@ -240,6 +370,10 @@ footer {
   padding: 20px 0;
   margin-top: 2rem;
 }
+body.dark-theme footer {
+    background-color: #2b7a4b; /* Slightly darker green */
+}
+
 
 .footer-links {
   display: flex;
@@ -283,6 +417,13 @@ footer a {
   color: white;
   text-decoration: underline;
 }
+body.dark-theme footer a {
+    color: #a8dab5; /* Lighter green for links */
+}
+body.dark-theme footer a:hover {
+    color: #c1e8c8;
+}
+
 
 /* Utility classes */
 .text-center {
@@ -351,19 +492,19 @@ footer a {
   nav ul {
     flex-direction: column;
   }
-  
+
   nav ul li {
     width: 100%;
   }
-  
+
   nav ul li a {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
+
   .features-grid {
     grid-template-columns: 1fr;
   }
-  
+
   main {
     margin: 1rem;
     padding: 1.5rem 1rem;
@@ -378,6 +519,10 @@ footer a {
   border-top-left-radius: var(--border-radius);
   border-top-right-radius: var(--border-radius);
 }
+body.dark-theme #timestamp-tool .card-header {
+    background-color: var(--primary-dark); /* Slightly darker blue */
+}
+
 
 #timestamp-tool .card-header h5 {
   margin-bottom: 0; /* Override default heading margin */
@@ -421,6 +566,11 @@ footer a {
   box-shadow: none; /* Remove shadow from inner cards */
   height: 100%; /* Ensure cards in a row have same height */
 }
+body.dark-theme #timestamp-tool #outputFormatsContainer .card {
+    background-color: var(--dark-card);
+    border-color: var(--dark-border);
+}
+
 
 #timestamp-tool #outputFormatsContainer .card:hover {
   transform: none; /* Disable hover effect for inner cards */
@@ -436,6 +586,10 @@ footer a {
   font-weight: 600;
   color: var(--text-light);
 }
+body.dark-theme #timestamp-tool #outputFormatsContainer .card-subtitle {
+    color: #9aa0a6; /* Lighter subtitle */
+}
+
 
 #timestamp-tool #outputFormatsContainer code {
   font-size: 1rem;
@@ -444,6 +598,11 @@ footer a {
   margin-top: 0.25rem;
   word-break: break-all; /* Prevent long strings from overflowing */
 }
+body.dark-theme #timestamp-tool #outputFormatsContainer code {
+    color: var(--dark-text);
+    background-color: transparent; /* Remove dark code background here if needed */
+}
+
 
 #timestamp-tool .copy-btn {
   padding: 0.25rem 0.5rem;
@@ -453,16 +612,30 @@ footer a {
   background: none;
   border: 1px solid transparent; /* Add border for alignment */
 }
+body.dark-theme #timestamp-tool .copy-btn {
+    color: #9aa0a6;
+}
+
 
 #timestamp-tool .copy-btn:hover {
   color: var(--primary-color);
   background-color: rgba(66, 133, 244, 0.1); /* Light primary background */
   border-color: rgba(66, 133, 244, 0.2);
 }
+body.dark-theme #timestamp-tool .copy-btn:hover {
+    color: #8ab4f8;
+    background-color: rgba(138, 180, 248, 0.1);
+    border-color: rgba(138, 180, 248, 0.2);
+}
+
 
 #timestamp-tool .copy-btn i.fa-check {
   color: var(--secondary-color); /* Green checkmark */
 }
+body.dark-theme #timestamp-tool .copy-btn i.fa-check {
+    color: #81c995; /* Lighter green */
+}
+
 
 #timestamp-tool #copyAllBtn {
   border-radius: 50px; /* Pill shape */
@@ -476,4 +649,235 @@ footer a {
 /* Ensure current time cards have consistent height */
 #timestamp-tool .card.bg-light {
     height: 100%;
+}
+body.dark-theme #timestamp-tool .card.bg-light {
+    background-color: var(--dark-card) !important; /* Override Bootstrap */
+    border-color: var(--dark-border);
+}
+
+/* --- AI Chat Specific Styles --- */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 400px; /* Or adjust as needed */
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden; /* Hide scrollbar until needed */
+}
+body.dark-theme .chat-container {
+    border-color: var(--dark-border);
+}
+
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    background-color: #ffffff; /* Keep messages area light by default */
+}
+body.dark-theme .chat-messages {
+    background-color: var(--dark-bg); /* Dark background for messages area */
+}
+
+
+.message-wrapper {
+    /* Wrapper to keep message and buttons together */
+    margin-bottom: 15px; /* Keep original message bubble margin */
+    max-width: 75%; /* Match message bubble width */
+    position: relative; /* Needed if you want absolute positioning inside */
+    display: flex; /* Use flexbox for alignment */
+    flex-direction: column; /* Stack bubble and buttons */
+}
+
+.message-wrapper.user-wrapper {
+    margin-left: auto; /* Align user messages right */
+    align-items: flex-end; /* Align content end */
+}
+
+.message-wrapper.ai-wrapper {
+    margin-right: auto; /* Align AI messages left */
+    align-items: flex-start; /* Align content start */
+}
+
+.message-bubble {
+    padding: 10px 15px;
+    border-radius: 18px;
+    line-height: 1.4;
+    word-wrap: break-word; /* Ensure long words break */
+    /* margin-bottom is handled by wrapper now */
+}
+
+.user-message {
+    background-color: var(--primary-color);
+    color: white;
+    border-bottom-right-radius: 4px; /* Google style */
+    align-self: flex-end; /* Ensure bubble aligns right in wrapper */
+}
+
+.ai-message {
+    background-color: #f1f3f4; /* Light grey for AI */
+    color: #202124; /* Dark text for AI */
+    border-bottom-left-radius: 4px; /* Google style */
+    align-self: flex-start; /* Ensure bubble aligns left in wrapper */
+}
+
+body.dark-theme .ai-message {
+    background-color: #3c4043; /* Darker grey for AI */
+    color: #e8eaed; /* Light text for AI */
+}
+
+.loading-indicator span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(0,0,0,0.5);
+    margin: 0 2px;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+body.dark-theme .loading-indicator span {
+    background-color: rgba(255,255,255,0.5);
+}
+
+.loading-indicator span:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.loading-indicator span:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(0.8); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+
+/* Feedback Buttons */
+.feedback-buttons {
+    /* Container for the buttons below the AI message */
+    padding-left: 10px; /* Align roughly with bubble padding */
+    padding-top: 5px;   /* Space between bubble and buttons */
+    opacity: 0.7;       /* Make them slightly less prominent initially */
+    transition: opacity 0.2s ease-in-out;
+    align-self: flex-start; /* Align buttons left within the ai-wrapper */
+}
+
+.message-wrapper:hover .feedback-buttons {
+    opacity: 1; /* Show buttons clearly on hover */
+}
+
+.feedback-btn {
+    /* Style for individual thumb buttons */
+    padding: 0.1rem 0.4rem; /* Smaller padding */
+    font-size: 0.8rem;    /* Smaller font size */
+    line-height: 1.2;     /* Adjust line height */
+    border-radius: 50%;   /* Make them circular like the design */
+    width: 28px;          /* Fixed width */
+    height: 28px;         /* Fixed height */
+    display: inline-flex; /* Center icon */
+    align-items: center;
+    justify-content: center;
+    border-width: 1px; /* Ensure border is consistent */
+}
+
+.feedback-btn:disabled {
+    opacity: 0.8; /* Slightly fade disabled buttons */
+    cursor: not-allowed;
+}
+/* Specific colors for feedback buttons */
+.feedback-btn.btn-success { background-color: var(--secondary-color); border-color: var(--secondary-color); color: white; }
+.feedback-btn.btn-danger { background-color: var(--accent-color); border-color: var(--accent-color); color: white; }
+.feedback-btn.btn-light { background-color: #e2e6ea; border-color: #e2e6ea; color: #495057; } /* For disabled state */
+
+body.dark-theme .feedback-btn.btn-outline-secondary {
+    color: var(--dark-text);
+    border-color: var(--dark-border);
+}
+body.dark-theme .feedback-btn.btn-outline-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .feedback-btn.btn-light { /* Used for disabled state */
+    background-color: var(--dark-card);
+    border-color: var(--dark-border);
+    color: var(--dark-text);
+    opacity: 0.5;
+}
+body.dark-theme .feedback-btn.btn-success { background-color: #34A853; border-color: #34A853; }
+body.dark-theme .feedback-btn.btn-danger { background-color: #EA4335; border-color: #EA4335; }
+
+
+/* Style for suggestion chips */
+#suggestedQueriesContainer { /* Target the container */
+    padding: 5px 0px; /* Add some padding, remove horizontal */
+    text-align: left; /* Align chips left */
+    margin-top: -5px; /* Reduce space after welcome message */
+    margin-bottom: 15px; /* Space before next message */
+}
+
+.suggestion-chip {
+    /* Styles for suggestion buttons */
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 16px; /* Pill shape */
+    padding: 5px 12px;
+    font-size: 0.9rem;
+    margin-right: 8px;
+    margin-bottom: 8px; /* Allow wrapping */
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.suggestion-chip:hover {
+    background-color: var(--hover-color);
+}
+/* Style for the "More suggestions" button */
+#suggestedQueriesContainer .btn-outline-secondary.suggestion-chip {
+    background-color: #e9ecef; /* Light grey */
+    color: var(--text-color);
+    border: 1px solid #ced4da;
+}
+#suggestedQueriesContainer .btn-outline-secondary.suggestion-chip:hover {
+    background-color: #d3d9df;
+}
+
+
+body.dark-theme #suggestedQueriesContainer .suggestion-chip {
+     background-color: #8ab4f8; /* Lighter blue */
+     color: #202124; /* Dark text on light blue */
+}
+body.dark-theme #suggestedQueriesContainer .suggestion-chip:hover {
+     background-color: #aecbfa;
+}
+
+body.dark-theme #suggestedQueriesContainer .btn-outline-secondary.suggestion-chip {
+     background-color: #3c4043; /* Dark grey */
+     border-color: var(--dark-border);
+     color: var(--dark-text);
+}
+body.dark-theme #suggestedQueriesContainer .btn-outline-secondary.suggestion-chip:hover {
+     background-color: #5f6368;
+}
+
+
+/* Style for processing state */
+.chat-container.processing {
+    background-color: rgba(66, 133, 244, 0.05); /* Subtle blue background */
+}
+
+body.dark-theme .chat-container.processing {
+    background-color: rgba(137, 180, 255, 0.1); /* Subtle blue for dark theme */
+}
+
+/* Ensure input group takes full width */
+#ai-chat .input-group {
+    width: 100%;
+}
+#ai-chat .input-group textarea {
+    resize: none; /* Prevent manual resize */
+}
+#ai-chat .input-group button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
