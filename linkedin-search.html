@@ -23,11 +23,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="images/logo.png">
     <link rel="apple-touch-icon" href="images/logo.png">
-    <!-- React and ReactDOM -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <!-- React and ReactDOM - Updated to stable versions -->
+    <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js" crossorigin></script>
     <!-- File Saver Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <!-- Babel with specific configuration -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script>
+      Babel.registerPreset('react', {
+        presets: [
+          [Babel.availablePresets['react']]
+        ]
+      });
+    </script>
+    <!-- Script error tracking -->
+    <script>
+      window.addEventListener('error', function(e) {
+        console.error('Script loading error:', e.target.src || e.target.href);
+      }, true);
+    </script>
 </head>
 <body>
     <header id="header-container">
@@ -44,7 +59,11 @@
             <p class="lead">Search for LinkedIn profiles and export the results as CSV with our powerful tool. Leverage your LinkedIn session to perform targeted searches and extract valuable data for lead generation, research, or analysis.</p>
             
             <div id="linkedin-search-app">
-                <!-- LinkedIn Search App will be mounted here -->
+                <!-- Loading indicator while React initializes -->
+                <div class="loading-message" style="text-align: center; padding: 30px; color: #666;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i>
+                    <p>Loading LinkedIn Search tool...</p>
+                </div>
             </div>
         </section>
     </main>
@@ -53,25 +72,51 @@
         <!-- Footer will be inserted by JavaScript -->
     </footer>
     
-    <!-- Babel for JSX transpilation -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
     <!-- Site scripts -->
     <script src="js/header.js"></script>
     <script src="js/nav.js"></script>
     <script src="js/footer.js"></script>
     
-    <!-- LinkedIn Search App (use type="text/babel" for JSX) -->
-    <script type="text/babel" src="js/linkedin-search.js"></script>
+    <!-- LinkedIn Search App with improved mounting code -->
+    <script type="text/babel" data-presets="react" src="js/linkedin-search.js"></script>
     
+    <!-- Improved component mounting with error handling -->
     <script type="text/babel">
-        // Mount the LinkedIn Search App
-        document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('linkedin-search-app');
-            if (container) {
-                ReactDOM.render(<LinkedInSearch />, container);
-            }
-        });
+      // Mount the component with error handling and debugging
+      document.addEventListener('DOMContentLoaded', () => {
+        try {
+          const container = document.getElementById('linkedin-search-app');
+          if (container) {
+            console.log("Container found, attempting to render LinkedIn component");
+            ReactDOM.render(
+              <React.StrictMode>
+                <LinkedInSearch />
+              </React.StrictMode>, 
+              container
+            );
+            console.log("LinkedIn component rendered successfully");
+          } else {
+            console.error("Container element 'linkedin-search-app' not found");
+          }
+        } catch (error) {
+          console.error("Error rendering LinkedIn component:", error);
+        }
+      });
+    </script>
+    
+    <!-- Debug and error tracking -->
+    <script>
+      // Track all errors
+      window.onerror = function(message, source, lineno, colno, error) {
+        console.error(`Global error: ${message} at ${source}:${lineno}:${colno}`, error);
+        return false;
+      };
+      
+      // Check if React and ReactDOM are loaded correctly
+      console.log("React version:", React ? React.version : "Not loaded");
+      console.log("ReactDOM version:", ReactDOM ? ReactDOM.version : "Not loaded");
+      console.log("Babel loaded:", typeof Babel !== 'undefined' ? "Yes" : "No");
+      console.log("FileSaver loaded:", typeof saveAs !== 'undefined' ? "Yes" : "No");
     </script>
 </body>
 </html>

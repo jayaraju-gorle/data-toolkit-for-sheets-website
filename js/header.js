@@ -65,6 +65,10 @@ function initHeader() {
       pageTitle.textContent = 'Support';
       pageSubtitle.textContent = 'Help and resources for Data Toolkit for Sheets';
       break;
+    case 'linkedin-search.html':
+      pageTitle.textContent = 'LinkedIn People Search & Export';
+      pageSubtitle.textContent = 'Search and export LinkedIn profiles';
+      break;
     default:
       // Default is already set above
       break;
