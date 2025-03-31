@@ -881,3 +881,365 @@ body.dark-theme .chat-container.processing {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
+
+/* LinkedIn Search Page Styles */
+
+.linkedin-search-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.linkedin-search-container h1 {
+  color: #0a66c2;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.linkedin-search-container h2 {
+  color: #333;
+  margin: 1.5rem 0 1rem;
+  font-size: 1.5rem;
+}
+
+.linkedin-search-container h3 {
+  color: #555;
+  font-size: 1.2rem;
+  margin: 1rem 0 0.75rem;
+}
+
+section {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Cookie Management */
+.security-warning {
+  background-color: #fff8e1;
+  border-left: 4px solid #ffc107;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+}
+
+.security-warning p {
+  margin: 0;
+  color: #5d4037;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.cookie-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  resize: vertical;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.form-group small {
+  display: block;
+  color: #666;
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.cookie-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.save-cookie, .cookie-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.save-cookie input, .cookie-select select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-width: 200px;
+}
+
+/* Search Criteria */
+.search-method {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.search-method label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+input[type="text"], input[type="number"], select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  font-size: 0.95rem;
+}
+
+.search-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* Buttons */
+button {
+  padding: 8px 16px;
+  background-color: #0a66c2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+button:hover:not(:disabled) {
+  background-color: #0959a8;
+}
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.start-search-btn {
+  background-color: #0a66c2;
+  font-weight: bold;
+  padding: 10px 20px;
+}
+
+.cancel-search-btn {
+  background-color: #f44336;
+}
+
+.cancel-search-btn:hover:not(:disabled) {
+  background-color: #d32f2f;
+}
+
+.export-csv-btn {
+  background-color: #4caf50;
+}
+
+.export-csv-btn:hover:not(:disabled) {
+  background-color: #388e3c;
+}
+
+.clear-history-btn {
+  background-color: #f44336;
+}
+
+/* Progress Bar */
+.progress-container {
+  margin: 20px 0;
+}
+
+.progress-bar {
+  height: 20px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #0a66c2;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Status Log */
+.status-log {
+  margin-top: 20px;
+}
+
+.status-messages {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  padding: 12px;
+  font-family: monospace;
+  font-size: 0.85rem;
+}
+
+.status-message {
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.status-time {
+  color: #666;
+  margin-right: 8px;
+}
+
+.status-message.error {
+  color: #d32f2f;
+}
+
+.no-messages, .waiting-message, .no-results, .no-history {
+  color: #757575;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+/* User Info */
+.user-info {
+  background-color: #e8f0fe;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+/* Results Table */
+.results-section h2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.results-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.results-table-container {
+  overflow-x: auto;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.results-table th, 
+.results-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.results-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}
+
+.results-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.results-table a {
+  color: #0a66c2;
+  text-decoration: none;
+}
+
+.results-table a:hover {
+  text-decoration: underline;
+}
+
+.return-to-current-btn {
+  background-color: #757575;
+  margin-bottom: 16px;
+}
+
+/* History Section */
+.history-actions {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.history-table th, 
+.history-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.history-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}
+
+.history-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.history-item-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.history-item-actions button {
+  padding: 4px 8px;
+  font-size: 0.8rem;
+}
+
+tr.active-history {
+  background-color: #e8f0fe;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .cookie-actions {
+    flex-direction: column;
+  }
+  
+  .save-cookie, .cookie-select {
+    width: 100%;
+  }
+  
+  .search-actions {
+    flex-direction: column;
+  }
+  
+  button {
+    width: 100%;
+  }
+}
