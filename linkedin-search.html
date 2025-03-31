@@ -28,8 +28,31 @@
     <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js" crossorigin></script>
     <!-- File Saver Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <!-- Babel with specific configuration -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Add this new script block: -->
+    <script>
+    // Make sure this runs before any JSX code is processed
+    try {
+        console.log("Configuring Babel...");
+        if (!Babel.availablePresets['react']) {
+        console.error("React preset not available in Babel");
+        } else {
+        console.log("React preset is available in Babel");
+        // Only register if not already registered
+        if (!Babel.registeredPresets || !Babel.registeredPresets.react) {
+            Babel.registerPreset('react', {
+            presets: [[Babel.availablePresets['react']]]
+            });
+            console.log("React preset registered successfully");
+        } else {
+            console.log("React preset already registered, skipping registration");
+        }
+        }
+    } catch (error) {
+        console.error("Error configuring Babel:", error);
+    }
+    </script>
     <script>
       Babel.registerPreset('react', {
         presets: [
@@ -42,6 +65,17 @@
       window.addEventListener('error', function(e) {
         console.error('Script loading error:', e.target.src || e.target.href);
       }, true);
+    </script>
+
+    <!-- Add this to detect script loading errors -->
+    <script>
+        // Track script loading errors
+        document.addEventListener('error', function(e) {
+        var elem = e.target;
+        if (elem.tagName.toLowerCase() === 'script') {
+            console.error('Script load error for:', elem.src);
+        }
+        }, true);
     </script>
 </head>
 <body>
@@ -76,47 +110,124 @@
     <script src="js/header.js"></script>
     <script src="js/nav.js"></script>
     <script src="js/footer.js"></script>
-    
-    <!-- LinkedIn Search App with improved mounting code -->
-    <script type="text/babel" data-presets="react" src="js/linkedin-search.js"></script>
-    
-    <!-- Improved component mounting with error handling -->
-    <script type="text/babel">
-      // Mount the component with error handling and debugging
-      document.addEventListener('DOMContentLoaded', () => {
+
+    <script>
+        // Check for potential variable conflicts
+        console.log("Global LinkedInSearch before loading:", typeof window.LinkedInSearch);
+        console.log("Global React properties:", Object.keys(React).join(", "));
+        
+        // Test React functionality
         try {
-          const container = document.getElementById('linkedin-search-app');
-          if (container) {
-            console.log("Container found, attempting to render LinkedIn component");
-            ReactDOM.render(
-              <React.StrictMode>
-                <LinkedInSearch />
-              </React.StrictMode>, 
-              container
-            );
-            console.log("LinkedIn component rendered successfully");
-          } else {
-            console.error("Container element 'linkedin-search-app' not found");
-          }
+        const testElement = React.createElement('div', null, 'Test');
+        console.log("React.createElement works");
         } catch (error) {
-          console.error("Error rendering LinkedIn component:", error);
+        console.error("React.createElement test failed:", error);
         }
-      });
     </script>
     
-    <!-- Debug and error tracking -->
+    <!-- LinkedIn Search App with improved mounting code -->
+    <script type="text/babel" data-presets="react" src="js/linkedin-search.js" defer></script>
+
+    
+    <!-- Add this script block before the mounting code -->
+    <script type="text/babel">
+        // Only define this if the LinkedIn component wasn't loaded from the external file
+        setTimeout(() => {
+        if (typeof LinkedInSearch === 'undefined') {
+            console.log("Fallback: Defining inline LinkedInSearch component");
+            
+            // Define a simple placeholder component
+            window.LinkedInSearch = () => {
+            return (
+                <div className="linkedin-search-container">
+                <h1>LinkedIn People Search & Export</h1>
+                <p>The search tool is currently being initialized. Please check the console for any errors.</p>
+                <p>If you're seeing this message, the external component failed to load properly.</p>
+                </div>
+            );
+            };
+        } else {
+            console.log("LinkedInSearch component was loaded successfully from external file");
+        }
+        }, 1000); // Give the external script time to load
+    </script>
+
+    <script type="text/babel">
+        // Mount the component with error handling and debugging
+        document.addEventListener('DOMContentLoaded', () => {
+        try {
+            const container = document.getElementById('linkedin-search-app');
+            if (container) {
+            console.log("Container found, attempting to render LinkedIn component");
+            ReactDOM.render(
+                <React.StrictMode>
+                <LinkedInSearch />
+                </React.StrictMode>, 
+                container
+            );
+            console.log("LinkedIn component rendered successfully");
+            } else {
+            console.error("Container element 'linkedin-search-app' not found");
+            }
+        } catch (error) {
+            console.error("Error rendering LinkedIn component:", error);
+        }
+        });
+    </script>
+    
+    <!-- With this updated version using React 18 API: -->
+    <script type="text/babel">
+        // Mount the component with error handling and debugging
+        document.addEventListener('DOMContentLoaded', () => {
+        try {
+            const container = document.getElementById('linkedin-search-app');
+            if (container) {
+            console.log("Container found, attempting to render LinkedIn component");
+            // Use createRoot API for React 18
+            const root = ReactDOM.createRoot(container);
+            root.render(<React.StrictMode><LinkedInSearch /></React.StrictMode>);
+            console.log("LinkedIn component rendered successfully");
+            } else {
+            console.error("Container element 'linkedin-search-app' not found");
+            }
+        } catch (error) {
+            console.error("Error rendering LinkedIn component:", error);
+        }
+        });
+    </script>
+
+    <!-- Add this as a last-resort fallback at the end of the body -->
     <script>
-      // Track all errors
-      window.onerror = function(message, source, lineno, colno, error) {
-        console.error(`Global error: ${message} at ${source}:${lineno}:${colno}`, error);
-        return false;
-      };
-      
-      // Check if React and ReactDOM are loaded correctly
-      console.log("React version:", React ? React.version : "Not loaded");
-      console.log("ReactDOM version:", ReactDOM ? ReactDOM.version : "Not loaded");
-      console.log("Babel loaded:", typeof Babel !== 'undefined' ? "Yes" : "No");
-      console.log("FileSaver loaded:", typeof saveAs !== 'undefined' ? "Yes" : "No");
+        // Fallback approach without JSX if nothing else works
+        setTimeout(() => {
+        if (document.getElementById('linkedin-search-app').children.length <= 1) {
+            console.log("JSX approach may have failed, trying direct React.createElement approach");
+            try {
+            const container = document.getElementById('linkedin-search-app');
+            if (container) {
+                // Clear loading indicator
+                container.innerHTML = '';
+                
+                const element = React.createElement('div', {className: 'linkedin-search-container'},
+                React.createElement('h1', null, 'LinkedIn People Search & Export'),
+                React.createElement('p', null, 'Loading search functionality...')
+                );
+                
+                // Try both APIs for compatibility
+                if (typeof ReactDOM.createRoot === 'function') {
+                const root = ReactDOM.createRoot(container);
+                root.render(element);
+                } else {
+                ReactDOM.render(element, container);
+                }
+                
+                console.log("Direct createElement approach executed");
+            }
+            } catch (error) {
+            console.error("Error in direct createElement approach:", error);
+            }
+        }
+        }, 2000); // Wait 2 seconds to see if other methods worked
     </script>
 </body>
 </html>

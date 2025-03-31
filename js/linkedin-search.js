@@ -1,3 +1,4 @@
+console.log("Loading LinkedInSearch component definition...");
 // LinkedInSearch component for LinkedIn People Search & Export
 const LinkedInSearch = () => {
     // State for form inputs
@@ -710,3 +711,14 @@ const LinkedInSearch = () => {
       </div>
     );
   };
+
+// Add this at the end of the file to ensure the component is globally available
+try {
+    // Make LinkedInSearch globally available
+    window.LinkedInSearch = LinkedInSearch;
+    console.log("LinkedInSearch component exposed globally");
+    } catch (error) {
+    console.error("Failed to expose LinkedInSearch globally:", error);
+}
+
+console.log("LinkedInSearch component defined successfully");
