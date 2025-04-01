@@ -3,14 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-M8FGTK0KM2"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-M8FGTK0KM2');
-    </script>
     <title>LinkedIn People Search & Export - Data Toolkit for Sheets</title>
     <meta name="description" content="Search and export LinkedIn profiles with our powerful search tool. Filter by keywords, location, and more, then export results as CSV.">
     <meta name="robots" content="index, follow">
@@ -23,59 +15,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="images/logo.png">
     <link rel="apple-touch-icon" href="images/logo.png">
-    <!-- React and ReactDOM - Updated to stable versions -->
-    <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js" crossorigin></script>
-    <!-- File Saver Library -->
+    
+    <!-- FileSaver.js for CSV export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-    <!-- Add this new script block: -->
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-M8FGTK0KM2"></script>
     <script>
-    // Make sure this runs before any JSX code is processed
-    try {
-        console.log("Configuring Babel...");
-        if (!Babel.availablePresets['react']) {
-        console.error("React preset not available in Babel");
-        } else {
-        console.log("React preset is available in Babel");
-        // Only register if not already registered
-        if (!Babel.registeredPresets || !Babel.registeredPresets.react) {
-            Babel.registerPreset('react', {
-            presets: [[Babel.availablePresets['react']]]
-            });
-            console.log("React preset registered successfully");
-        } else {
-            console.log("React preset already registered, skipping registration");
-        }
-        }
-    } catch (error) {
-        console.error("Error configuring Babel:", error);
-    }
-    </script>
-    <script>
-      Babel.registerPreset('react', {
-        presets: [
-          [Babel.availablePresets['react']]
-        ]
-      });
-    </script>
-    <!-- Script error tracking -->
-    <script>
-      window.addEventListener('error', function(e) {
-        console.error('Script loading error:', e.target.src || e.target.href);
-      }, true);
-    </script>
-
-    <!-- Add this to detect script loading errors -->
-    <script>
-        // Track script loading errors
-        document.addEventListener('error', function(e) {
-        var elem = e.target;
-        if (elem.tagName.toLowerCase() === 'script') {
-            console.error('Script load error for:', elem.src);
-        }
-        }, true);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-M8FGTK0KM2');
     </script>
 </head>
 <body>
@@ -92,12 +42,228 @@
             <h2>LinkedIn People Search & Export</h2>
             <p class="lead">Search for LinkedIn profiles and export the results as CSV with our powerful tool. Leverage your LinkedIn session to perform targeted searches and extract valuable data for lead generation, research, or analysis.</p>
             
-            <div id="linkedin-search-app">
-                <!-- Loading indicator while React initializes -->
-                <div class="loading-message" style="text-align: center; padding: 30px; color: #666;">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i>
-                    <p>Loading LinkedIn Search tool...</p>
-                </div>
+            <div class="linkedin-search-container">
+                <h1>LinkedIn People Search & Export</h1>
+                
+                <!-- Configuration Section -->
+                <section class="config-section">
+                    <h2>Search Configuration</h2>
+                    
+                    <!-- Cookie Management -->
+                    <div class="cookie-management">
+                        <h3>LinkedIn Cookie Management</h3>
+                        
+                        <div class="security-warning">
+                            <p><strong>⚠️ Security Warning:</strong> Your LinkedIn cookie provides full access to your account. 
+                            Store cookies only on trusted devices. We store cookies in your browser's local storage and 
+                            never transmit them to our servers except when performing a search.</p>
+                        </div>
+                        
+                        <div class="cookie-input-row">
+                            <div class="form-group">
+                                <label for="cookie-string">LinkedIn Cookie String</label>
+                                <textarea 
+                                    id="cookie-string"
+                                    class="cookie-textarea"
+                                    placeholder="Paste your LinkedIn cookie string here (li_at cookie required)"
+                                ></textarea>
+                                <small>
+                                    How to get cookies: Open LinkedIn.com &gt; Developer Tools (F12) &gt; 
+                                    Application tab &gt; Cookies &gt; www.linkedin.com &gt; Copy the entire 
+                                    cookie string with values.
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <div class="cookie-actions">
+                            <div class="save-cookie">
+                                <input 
+                                    type="text"
+                                    id="cookie-label"
+                                    placeholder="Cookie Label (e.g., 'Work Account')"
+                                />
+                                <button id="save-cookie-btn">Save Cookie</button>
+                            </div>
+                            
+                            <div class="cookie-select">
+                                <select id="cookie-select">
+                                    <option value="">-- Select a saved cookie --</option>
+                                </select>
+                                
+                                <button id="delete-cookie-btn">Delete Cookie</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Search Criteria -->
+                    <div class="search-criteria">
+                        <h3>Search Criteria</h3>
+                        
+                        <div class="search-method">
+                            <label>
+                                <input 
+                                    type="radio"
+                                    name="search-method"
+                                    id="search-term-radio"
+                                    value="term"
+                                    checked
+                                />
+                                Search Term
+                            </label>
+                            
+                            <label>
+                                <input 
+                                    type="radio"
+                                    name="search-method"
+                                    id="search-url-radio"
+                                    value="url"
+                                />
+                                Full Search URL
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="search-input" id="search-input-label">Search Term</label>
+                            <input 
+                                type="text"
+                                id="search-input"
+                                placeholder="e.g., Software Engineer Fintech London"
+                            />
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="max-pages">Maximum Pages to Scrape (1-100)</label>
+                            <input 
+                                type="number"
+                                id="max-pages"
+                                min="1"
+                                max="100"
+                                value="100"
+                            />
+                            <small>Each page contains approximately 10 profiles. LinkedIn has a practical limit of ~100 pages.</small>
+                        </div>
+                        
+                        <div class="search-actions">
+                            <button 
+                                class="start-search-btn"
+                                id="start-search-btn"
+                            >
+                                Start Search
+                            </button>
+                            
+                            <button 
+                                class="cancel-search-btn"
+                                id="cancel-search-btn"
+                                disabled
+                            >
+                                Cancel Search
+                            </button>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Search Execution Section -->
+                <section class="execution-section">
+                    <h2>Search Progress</h2>
+                    
+                    <div class="user-info" id="user-info" style="display: none;"></div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div 
+                                class="progress-fill" 
+                                id="progress-bar"
+                                style="width: 0%"
+                            ></div>
+                        </div>
+                        <div class="progress-text" id="progress-text">0%</div>
+                    </div>
+                    
+                    <div class="status-log">
+                        <h3>Status Log</h3>
+                        <div class="status-messages" id="status-messages">
+                            <p class="no-messages">No messages yet. Start a search to see updates.</p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Results Section -->
+                <section class="results-section">
+                    <h2 id="results-heading">Search Results</h2>
+                    
+                    <button 
+                        class="return-to-current-btn"
+                        id="return-to-current-btn"
+                        style="display: none;"
+                    >
+                        Return to Current Results
+                    </button>
+                    
+                    <div class="results-actions">
+                        <p><strong id="results-count">0</strong> profiles found</p>
+                        <button 
+                            class="export-csv-btn"
+                            id="export-csv-btn"
+                            disabled
+                        >
+                            Export as CSV
+                        </button>
+                    </div>
+                    
+                    <div class="results-table-container">
+                        <p class="waiting-message" id="waiting-message" style="display: none;">Waiting for results...</p>
+                        <p class="no-results" id="no-results">No results to display. Start a search to see results here.</p>
+                        
+                        <table class="results-table" id="results-table" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Title</th>
+                                    <th>Location</th>
+                                    <th>Connection Degree</th>
+                                    <th>Profile URL</th>
+                                </tr>
+                            </thead>
+                            <tbody id="results-table-body">
+                                <!-- Results will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Search History Section -->
+                <section class="history-section">
+                    <h2>Search History</h2>
+                    
+                    <p class="no-history" id="no-history">No search history yet. Complete a search to save it here.</p>
+                    
+                    <div class="history-actions">
+                        <button 
+                            class="clear-history-btn"
+                            id="clear-history-btn"
+                            style="display: none;"
+                        >
+                            Clear All History
+                        </button>
+                    </div>
+                    
+                    <div class="history-list">
+                        <table class="history-table" id="history-table" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>Label</th>
+                                    <th>Date</th>
+                                    <th>Search Criteria</th>
+                                    <th>Results</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-table-body">
+                                <!-- History items will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
             </div>
         </section>
     </main>
@@ -106,128 +272,12 @@
         <!-- Footer will be inserted by JavaScript -->
     </footer>
     
-    <!-- Site scripts -->
+    <!-- Site core scripts -->
     <script src="js/header.js"></script>
     <script src="js/nav.js"></script>
     <script src="js/footer.js"></script>
-
-    <script>
-        // Check for potential variable conflicts
-        console.log("Global LinkedInSearch before loading:", typeof window.LinkedInSearch);
-        console.log("Global React properties:", Object.keys(React).join(", "));
-        
-        // Test React functionality
-        try {
-        const testElement = React.createElement('div', null, 'Test');
-        console.log("React.createElement works");
-        } catch (error) {
-        console.error("React.createElement test failed:", error);
-        }
-    </script>
     
-    <!-- LinkedIn Search App with improved mounting code -->
-    <script type="text/babel" data-presets="react" src="js/linkedin-search.js" defer></script>
-
-    
-    <!-- Add this script block before the mounting code -->
-    <script type="text/babel">
-        // Only define this if the LinkedIn component wasn't loaded from the external file
-        setTimeout(() => {
-        if (typeof LinkedInSearch === 'undefined') {
-            console.log("Fallback: Defining inline LinkedInSearch component");
-            
-            // Define a simple placeholder component
-            window.LinkedInSearch = () => {
-            return (
-                <div className="linkedin-search-container">
-                <h1>LinkedIn People Search & Export</h1>
-                <p>The search tool is currently being initialized. Please check the console for any errors.</p>
-                <p>If you're seeing this message, the external component failed to load properly.</p>
-                </div>
-            );
-            };
-        } else {
-            console.log("LinkedInSearch component was loaded successfully from external file");
-        }
-        }, 1000); // Give the external script time to load
-    </script>
-
-    <script type="text/babel">
-        // Mount the component with error handling and debugging
-        document.addEventListener('DOMContentLoaded', () => {
-        try {
-            const container = document.getElementById('linkedin-search-app');
-            if (container) {
-            console.log("Container found, attempting to render LinkedIn component");
-            ReactDOM.render(
-                <React.StrictMode>
-                <LinkedInSearch />
-                </React.StrictMode>, 
-                container
-            );
-            console.log("LinkedIn component rendered successfully");
-            } else {
-            console.error("Container element 'linkedin-search-app' not found");
-            }
-        } catch (error) {
-            console.error("Error rendering LinkedIn component:", error);
-        }
-        });
-    </script>
-    
-    <!-- With this updated version using React 18 API: -->
-    <script type="text/babel">
-        // Mount the component with error handling and debugging
-        document.addEventListener('DOMContentLoaded', () => {
-        try {
-            const container = document.getElementById('linkedin-search-app');
-            if (container) {
-            console.log("Container found, attempting to render LinkedIn component");
-            // Use createRoot API for React 18
-            const root = ReactDOM.createRoot(container);
-            root.render(<React.StrictMode><LinkedInSearch /></React.StrictMode>);
-            console.log("LinkedIn component rendered successfully");
-            } else {
-            console.error("Container element 'linkedin-search-app' not found");
-            }
-        } catch (error) {
-            console.error("Error rendering LinkedIn component:", error);
-        }
-        });
-    </script>
-
-    <!-- Add this as a last-resort fallback at the end of the body -->
-    <script>
-        // Fallback approach without JSX if nothing else works
-        setTimeout(() => {
-        if (document.getElementById('linkedin-search-app').children.length <= 1) {
-            console.log("JSX approach may have failed, trying direct React.createElement approach");
-            try {
-            const container = document.getElementById('linkedin-search-app');
-            if (container) {
-                // Clear loading indicator
-                container.innerHTML = '';
-                
-                const element = React.createElement('div', {className: 'linkedin-search-container'},
-                React.createElement('h1', null, 'LinkedIn People Search & Export'),
-                React.createElement('p', null, 'Loading search functionality...')
-                );
-                
-                // Try both APIs for compatibility
-                if (typeof ReactDOM.createRoot === 'function') {
-                const root = ReactDOM.createRoot(container);
-                root.render(element);
-                } else {
-                ReactDOM.render(element, container);
-                }
-                
-                console.log("Direct createElement approach executed");
-            }
-            } catch (error) {
-            console.error("Error in direct createElement approach:", error);
-            }
-        }
-        }, 2000); // Wait 2 seconds to see if other methods worked
-    </script>
+    <!-- LinkedIn Search Script -->
+    <script src="js/linkedin-search-vanilla.js"></script>
 </body>
 </html>
