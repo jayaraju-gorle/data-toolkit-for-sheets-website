@@ -16,6 +16,9 @@
     <link rel="icon" type="image/png" href="images/logo.png">
     <link rel="apple-touch-icon" href="images/logo.png">
     
+    <!-- Bootstrap for enhanced UI components -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
     <!-- FileSaver.js for CSV export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     
@@ -36,6 +39,14 @@
     <nav id="nav-container">
         <!-- Nav will be inserted by JavaScript -->
     </nav>
+    
+    <!-- Dark Mode Toggle -->
+    <div class="dark-mode-container">
+        <button id="dark-mode-toggle" class="btn btn-sm">
+            <i class="fas fa-moon"></i>
+            <span>Dark Mode</span>
+        </button>
+    </div>
     
     <main>
         <section class="container">
@@ -68,9 +79,9 @@
                                     placeholder="Paste your LinkedIn cookie string here (li_at cookie required)"
                                 ></textarea>
                                 <small>
-                                    How to get cookies: Open LinkedIn.com &gt; Developer Tools (F12) &gt; 
-                                    Application tab &gt; Cookies &gt; www.linkedin.com &gt; Copy the entire 
-                                    cookie string with values.
+                                    <button id="cookie-help-btn" class="btn btn-sm btn-link p-0 mb-1">
+                                        <i class="fas fa-question-circle"></i> How to get your LinkedIn cookies
+                                    </button>
                                 </small>
                             </div>
                         </div>
@@ -120,18 +131,90 @@
                                 />
                                 Full Search URL
                             </label>
+                            
+                            <label>
+                                <input 
+                                    type="radio"
+                                    name="search-method"
+                                    id="search-builder-radio"
+                                    value="builder"
+                                />
+                                Search Builder
+                            </label>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="search-input" id="search-input-label">Search Term</label>
-                            <input 
-                                type="text"
-                                id="search-input"
-                                placeholder="e.g., Software Engineer Fintech London"
-                            />
+                        <!-- Standard Search Input (shown for term and URL) -->
+                        <div id="standard-search-container">
+                            <div class="form-group">
+                                <label for="search-input" id="search-input-label">Search Term</label>
+                                <input 
+                                    type="text"
+                                    id="search-input"
+                                    placeholder="e.g., Software Engineer Fintech London"
+                                />
+                            </div>
                         </div>
                         
-                        <div class="form-group">
+                        <!-- Advanced Search Builder (initially hidden) -->
+                        <div id="search-builder-container" style="display: none;">
+                            <div class="search-builder-grid">
+                                <div class="form-group">
+                                    <label for="search-keywords">Keywords</label>
+                                    <input type="text" id="search-keywords" placeholder="Job titles, skills, or keywords" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="search-first-name">First Name</label>
+                                    <input type="text" id="search-first-name" placeholder="First name" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="search-last-name">Last Name</label>
+                                    <input type="text" id="search-last-name" placeholder="Last name" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="search-title">Job Title</label>
+                                    <input type="text" id="search-title" placeholder="Current or past job title" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="search-company">Company</label>
+                                    <input type="text" id="search-company" placeholder="Current or past company" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="search-school">School</label>
+                                    <input type="text" id="search-school" placeholder="School or university" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="search-location">Location</label>
+                                    <input type="text" id="search-location" placeholder="City, state, or country" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="search-industry">Industry</label>
+                                    <input type="text" id="search-industry" placeholder="Industry" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="search-connections">Connection Degree</label>
+                                    <select id="search-connections">
+                                        <option value="">Any connection</option>
+                                        <option value="F">1st connections</option>
+                                        <option value="S">2nd connections</option>
+                                        <option value="O">3rd+ connections</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <button id="generate-search-url-btn" class="btn btn-primary mt-3">
+                                <i class="fas fa-magic"></i> Generate Search URL
+                            </button>
+                        </div>
+                        
+                        <div class="form-group mt-3">
                             <label for="max-pages">Maximum Pages to Scrape (1-100)</label>
                             <input 
                                 type="number"
@@ -148,7 +231,7 @@
                                 class="start-search-btn"
                                 id="start-search-btn"
                             >
-                                Start Search
+                                <i class="fas fa-search"></i> Start Search
                             </button>
                             
                             <button 
@@ -156,7 +239,7 @@
                                 id="cancel-search-btn"
                                 disabled
                             >
-                                Cancel Search
+                                <i class="fas fa-stop"></i> Cancel Search
                             </button>
                         </div>
                     </div>
@@ -210,17 +293,43 @@
                         </button>
                     </div>
                     
+                    <!-- Results Filter -->
+                    <div class="results-filters" style="display: none;">
+                        <h3>Filter Results</h3>
+                        <div class="filters-grid">
+                            <div class="form-group">
+                                <label for="name-filter">Name</label>
+                                <input type="text" id="name-filter" class="filter-control" placeholder="Filter by name...">
+                            </div>
+                            <div class="form-group">
+                                <label for="title-filter">Title</label>
+                                <input type="text" id="title-filter" class="filter-control" placeholder="Filter by title...">
+                            </div>
+                            <div class="form-group">
+                                <label for="location-filter">Location</label>
+                                <input type="text" id="location-filter" class="filter-control" placeholder="Filter by location...">
+                            </div>
+                            <div class="form-group">
+                                <label for="connection-filter">Connection</label>
+                                <input type="text" id="connection-filter" class="filter-control" placeholder="Filter by connection...">
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="results-table-container">
-                        <p class="waiting-message" id="waiting-message" style="display: none;">Waiting for results...</p>
+                        <p class="waiting-message" id="waiting-message" style="display: none;">
+                            <i class="fas fa-circle-notch fa-spin"></i> Searching LinkedIn profiles...
+                        </p>
                         <p class="no-results" id="no-results">No results to display. Start a search to see results here.</p>
                         
                         <table class="results-table" id="results-table" style="display: none;">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Title</th>
-                                    <th>Location</th>
-                                    <th>Connection Degree</th>
+                                    <th data-column="profileImage">Profile</th>
+                                    <th data-column="name">Name</th>
+                                    <th data-column="title">Title</th>
+                                    <th data-column="location">Location</th>
+                                    <th data-column="connectionDegree">Connection</th>
                                     <th>Profile URL</th>
                                 </tr>
                             </thead>
@@ -268,9 +377,344 @@
         </section>
     </main>
     
+    <!-- Cookie Help Modal -->
+    <div class="modal fade" id="cookieHelpModal" tabindex="-1" aria-labelledby="cookieHelpModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cookieHelpModalLabel">How to Get Your LinkedIn Cookies</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="cookie-help-steps">
+                        <h6>Step 1: Log in to LinkedIn</h6>
+                        <p>Make sure you're logged in to <a href="https://www.linkedin.com" target="_blank">LinkedIn.com</a> in the same browser.</p>
+                        
+                        <h6>Step 2: Open Developer Tools</h6>
+                        <p>Right-click anywhere on the LinkedIn page and select "Inspect" or press:</p>
+                        <ul>
+                            <li>Windows: F12 or Ctrl+Shift+I</li>
+                            <li>Mac: Cmd+Option+I</li>
+                        </ul>
+                        
+                        <h6>Step 3: Access the Application Tab</h6>
+                        <p>In the developer tools panel, click on the "Application" tab (you might need to click the >> arrows to find it).</p>
+                        
+                        <h6>Step 4: Find the Cookies</h6>
+                        <p>In the left sidebar, expand "Cookies" and click on "https://www.linkedin.com"</p>
+                        
+                        <h6>Step 5: Find and Copy the li_at Cookie</h6>
+                        <p>In the cookies list, find the cookie named "li_at". Right-click on its value and select "Copy Value".</p>
+                        
+                        <h6>Step 6: Paste Into Cookie String Field</h6>
+                        <p>Paste the copied value into the "LinkedIn Cookie String" textarea above.</p>
+                        
+                        <div class="alert alert-info">
+                            <strong>Tip:</strong> For more reliable authentication, you can also include your other LinkedIn cookies. 
+                            In the Cookies list, right-click the table header and select "Copy all" to get all cookies in 
+                            a name=value format, then paste that into the cookie string field.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <footer id="footer-container">
         <!-- Footer will be inserted by JavaScript -->
     </footer>
+    
+    <!-- Toast container for notifications -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Enhanced CSS -->
+    <style>
+        /* Enhanced Styles for LinkedIn Search */
+        
+        /* Search Builder styling */
+        .search-builder-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 16px;
+          margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+          .search-builder-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+        
+        /* Search Status and Progress Enhancements */
+        .status-message {
+          padding: 5px 0;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+          transition: background-color 0.3s;
+        }
+        
+        body.dark-theme .status-message {
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .status-message:hover {
+          background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        body.dark-theme .status-message:hover {
+          background-color: rgba(255, 255, 255, 0.02);
+        }
+        
+        .status-message.error {
+          color: #d32f2f;
+          border-left: 3px solid #d32f2f;
+          padding-left: 8px;
+          background-color: rgba(211, 47, 47, 0.05);
+        }
+        
+        .status-message.warning {
+          color: #f57c00;
+          border-left: 3px solid #f57c00;
+          padding-left: 8px;
+          background-color: rgba(245, 124, 0, 0.05);
+        }
+        
+        .status-message.success {
+          color: #388e3c;
+          border-left: 3px solid #388e3c;
+          padding-left: 8px;
+          background-color: rgba(56, 142, 60, 0.05);
+        }
+        
+        body.dark-theme .status-message.error {
+          color: #ef5350;
+          border-left-color: #ef5350;
+          background-color: rgba(239, 83, 80, 0.1);
+        }
+        
+        body.dark-theme .status-message.warning {
+          color: #ffb74d;
+          border-left-color: #ffb74d;
+          background-color: rgba(255, 183, 77, 0.1);
+        }
+        
+        body.dark-theme .status-message.success {
+          color: #66bb6a;
+          border-left-color: #66bb6a;
+          background-color: rgba(102, 187, 106, 0.1);
+        }
+        
+        /* Progress bar animation */
+        .progress-fill {
+          background-image: linear-gradient(
+            45deg,
+            rgba(255, 255, 255, 0.2) 25%,
+            transparent 25%,
+            transparent 50%,
+            rgba(255, 255, 255, 0.2) 50%,
+            rgba(255, 255, 255, 0.2) 75%,
+            transparent 75%,
+            transparent
+          );
+          background-size: 1rem 1rem;
+          animation: progress-animation 1s linear infinite;
+        }
+        
+        @keyframes progress-animation {
+          0% { background-position: 0 0; }
+          100% { background-position: 1rem 0; }
+        }
+        
+        /* Results table enhancements */
+        .results-table th {
+          cursor: pointer;
+          position: relative;
+          padding-right: 20px; /* Space for sort indicator */
+          user-select: none;
+        }
+        
+        .results-table th:hover {
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        body.dark-theme .results-table th:hover {
+          background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .results-table th.sorted-asc,
+        .results-table th.sorted-desc {
+          background-color: rgba(66, 133, 244, 0.1);
+        }
+        
+        body.dark-theme .results-table th.sorted-asc,
+        body.dark-theme .results-table th.sorted-desc {
+          background-color: rgba(66, 133, 244, 0.2);
+        }
+        
+        .sort-icon {
+          margin-left: 5px;
+          font-size: 0.8em;
+        }
+        
+        /* New profile animation for real-time updates */
+        @keyframes new-profile-fade {
+          from { background-color: rgba(76, 175, 80, 0.2); }
+          to { background-color: transparent; }
+        }
+        
+        .new-profile {
+          animation: new-profile-fade 2s ease-out;
+        }
+        
+        body.dark-theme .new-profile {
+          animation: new-profile-fade-dark 2s ease-out;
+        }
+        
+        @keyframes new-profile-fade-dark {
+          from { background-color: rgba(76, 175, 80, 0.3); }
+          to { background-color: transparent; }
+        }
+        
+        /* Filter controls */
+        .results-filters {
+          background-color: var(--light-bg);
+          padding: 15px;
+          border-radius: var(--border-radius);
+          margin-bottom: 20px;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        body.dark-theme .results-filters {
+          background-color: var(--dark-card);
+          border-color: var(--dark-border);
+        }
+        
+        .filters-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 15px;
+        }
+        
+        .filter-control {
+          width: 100%;
+          padding: 8px 12px;
+          border: 1px solid var(--border-color);
+          border-radius: 4px;
+        }
+        
+        body.dark-theme .filter-control {
+          background-color: var(--dark-bg);
+          border-color: var(--dark-border);
+          color: var(--dark-text);
+        }
+        
+        /* Toast Notifications */
+        .toast-container {
+          z-index: 1050;
+        }
+        
+        .toast {
+          opacity: 0.95;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          border-radius: 8px;
+          overflow: hidden;
+        }
+        
+        /* Export modal */
+        .export-columns-container {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+          gap: 10px;
+          margin: 10px 0;
+        }
+        
+        /* Cookie Help */
+        .cookie-help-steps h6 {
+          color: var(--primary-color);
+          margin-top: 15px;
+        }
+        
+        body.dark-theme .cookie-help-steps h6 {
+          color: #8ab4f8;
+        }
+        
+        /* Dark mode toggle button */
+        .dark-mode-container {
+          position: fixed;
+          top: 15px;
+          right: 15px;
+          z-index: 1000;
+        }
+        
+        .dark-mode-toggle {
+          background-color: rgba(0, 0, 0, 0.1);
+          border: none;
+          border-radius: 50px;
+          padding: 8px 16px;
+          color: var(--text-color);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          transition: background-color 0.3s;
+        }
+        
+        .dark-mode-toggle:hover {
+          background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        body.dark-theme .dark-mode-toggle {
+          background-color: rgba(255, 255, 255, 0.2);
+          color: var(--dark-text);
+        }
+        
+        body.dark-theme .dark-mode-toggle:hover {
+          background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Hidden filter rows */
+        tr.hidden {
+          display: none;
+        }
+        
+        /* Mobile responsiveness enhancements */
+        @media (max-width: 576px) {
+          .search-actions {
+            flex-direction: column;
+            gap: 10px;
+          }
+          
+          .search-actions button {
+            width: 100%;
+          }
+          
+          .cookie-actions {
+            flex-direction: column;
+          }
+          
+          .save-cookie, .cookie-select {
+            width: 100%;
+          }
+          
+          .dark-mode-container {
+            top: auto;
+            bottom: 15px;
+            right: 15px;
+          }
+          
+          .results-table {
+            font-size: 0.9rem;
+          }
+          
+          .export-columns-container {
+            grid-template-columns: 1fr;
+          }
+        }
+    </style>
     
     <!-- Site core scripts -->
     <script src="js/header.js"></script>
