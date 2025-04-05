@@ -22,20 +22,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     try {
-      // Define default columns to export
-      const defaultColumns = [
+      // Define ALL possible columns
+      const allColumns = [
         { key: 'name', header: 'Full Name' },
         { key: 'title', header: 'Title' },
-        { key: 'company', header: 'Company', getValue: (profile) => {
-          // Extract company from title if possible
-          const title = profile.title || '';
-          if (title.includes(' at ')) {
-            return title.split(' at ')[1].trim();
-          }
-          return '';
-        }},
         { key: 'location', header: 'Location' },
-        { key: 'connectionDegree', header: 'Connection' },
+        { key: 'connectionDegree', header: 'Connection Degree' },
         { key: 'profileUrl', header: 'Profile URL' },
         { key: 'linkedinId', header: 'LinkedIn ID', getValue: (profile) => {
           // Extract ID from URL if available
@@ -47,11 +39,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }},
         { key: 'isAnonymous', header: 'Is Anonymous', getValue: (profile) => {
           return profile.isAnonymous ? 'Yes' : 'No';
+        }},
+        { key: 'profileImage', header: 'Profile Image URL', getValue: (profile) => {
+          return profile.profileImage?.src || '';
         }}
       ];
       
-      // Use provided columns or defaults
-      const columnsToExport = options.columns || defaultColumns;
+      // Use provided columns or default to all columns
+      const columnsToExport = options.columns || allColumns;
       
       // Create CSV header row
       const headers = columnsToExport.map(col => col.header);
@@ -73,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
           
           // Escape CSV special characters
           return typeof value === 'string' && (value.includes(',') || value.includes('"') || value.includes('\n'))
-            ? `"${value.replace(/"/g, '""')}"`
+            ? `"${value.replace(/"/g, '""')}"` 
             : value;
         }).join(',');
         
@@ -158,10 +153,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <label class="form-check-label" for="export-col-title">Title</label>
                   </div>
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="company" id="export-col-company" checked>
-                    <label class="form-check-label" for="export-col-company">Company</label>
-                  </div>
-                  <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="location" id="export-col-location" checked>
                     <label class="form-check-label" for="export-col-location">Location</label>
                   </div>
@@ -180,6 +171,10 @@ document.addEventListener('DOMContentLoaded', function() {
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="isAnonymous" id="export-col-anonymous" checked>
                     <label class="form-check-label" for="export-col-anonymous">Is Anonymous</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="profileImage" id="export-col-image" checked>
+                    <label class="form-check-label" for="export-col-image">Profile Image URL</label>
                   </div>
                 </div>
               </div>
@@ -210,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       document.body.appendChild(exportModal);
       
-      // Add event listeners for export modal
+      // Add event listeners similar to the previous implementation
       document.getElementById('export-filtered-only').addEventListener('change', function() {
         const filteredCountElement = document.getElementById('filtered-count');
         const filteredMessageElement = document.getElementById('filtered-count-message');
@@ -232,34 +227,42 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Get selected columns
         const columns = [];
+        const allColumns = [
+          { value: 'name', key: 'name', header: 'Full Name' },
+          { value: 'title', key: 'title', header: 'Title' },
+          { value: 'location', key: 'location', header: 'Location' },
+          { value: 'connectionDegree', key: 'connectionDegree', header: 'Connection Degree' },
+          { value: 'profileUrl', key: 'profileUrl', header: 'Profile URL' },
+          { 
+            value: 'linkedinId', 
+            key: 'linkedinId', 
+            header: 'LinkedIn ID',
+            getValue: (profile) => {
+              const url = profile.profileUrl || '';
+              if (url.includes('/in/')) {
+                return url.split('/in/')[1].split('/')[0];
+              }
+              return profile.linkedinId || '';
+            }
+          },
+          { 
+            value: 'isAnonymous', 
+            key: 'isAnonymous', 
+            header: 'Is Anonymous',
+            getValue: (profile) => profile.isAnonymous ? 'Yes' : 'No'
+          },
+          { 
+            value: 'profileImage', 
+            key: 'profileImage', 
+            header: 'Profile Image URL',
+            getValue: (profile) => profile.profileImage?.src || ''
+          }
+        ];
+        
         document.querySelectorAll('.export-columns-container input:checked').forEach(checkbox => {
-          switch(checkbox.value) {
-            case 'name':
-              columns.push({ key: 'name', header: 'Full Name' }); 
-              break;
-            case 'title':
-              columns.push({ key: 'title', header: 'Title' });
-              break;
-            case 'company':
-              columns.push({ 
-                key: 'company', 
-                header: 'LinkedIn ID',
-                getValue: (profile) => {
-                  const url = profile.profileUrl || '';
-                  if (url.includes('/in/')) {
-                    return url.split('/in/')[1].split('/')[0];
-                  }
-                  return profile.linkedinId || '';
-                }
-              });
-              break;
-            case 'isAnonymous':
-              columns.push({ 
-                key: 'isAnonymous', 
-                header: 'Is Anonymous',
-                getValue: (profile) => profile.isAnonymous ? 'Yes' : 'No'
-              });
-              break;
+          const columnConfig = allColumns.find(col => col.value === checkbox.value);
+          if (columnConfig) {
+            columns.push(columnConfig);
           }
         });
         
@@ -270,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const options = {
           filename,
           columns,
-          skipModal: true // Prevent recursive modal showing
+          skipModal: true // Prevent recursive modal opening
         };
         
         // Add filter if needed
@@ -282,21 +285,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const modalInstance = bootstrap.Modal.getInstance(exportModal);
         modalInstance.hide();
         
-        // Do the export
+        // Perform export
         exportToCsv(resultsToExport, options);
       });
-    } else {
-      // Update existing modal if needed
-      document.getElementById('export-filename').value = `linkedin-search-${new Date().toISOString().split('T')[0]}.csv`;
-      
-      const countElement = exportModal.querySelector('.alert-info strong');
-      if (countElement) {
-        countElement.textContent = `${resultsToExport.length} profiles`;
-      }
-      
-      // Reset filtered message
-      document.getElementById('filtered-count-message').style.display = 'none';
-      document.getElementById('export-filtered-only').checked = false;
     }
     
     // Show the modal
